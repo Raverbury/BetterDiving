@@ -2,12 +2,11 @@ package meldexun.better_diving.network.packet.server;
 
 import java.util.function.Supplier;
 
-import meldexun.better_diving.capability.oxygen.entity.CapabilityOxygenProvider;
 import meldexun.better_diving.client.ClientBetterDiving;
 import meldexun.better_diving.network.packet.IPacket;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.network.NetworkEvent;
 
 public class SPacketSyncOxygen implements IPacket {
 
@@ -22,19 +21,19 @@ public class SPacketSyncOxygen implements IPacket {
 	}
 
 	@Override
-	public void encode(PacketBuffer buffer) {
+	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeInt(this.oxygen);
 	}
 
 	@Override
-	public void decode(PacketBuffer buffer) {
+	public void decode(FriendlyByteBuf buffer) {
 		this.oxygen = buffer.readInt();
 	}
 
 	@Override
-	public boolean handle(Supplier<Context> ctxSupplier) {
-		PlayerEntity player = ClientBetterDiving.getPlayer();
-		player.getCapability(CapabilityOxygenProvider.OXYGEN).ifPresent(cap -> cap.setOxygen(this.oxygen));
+	public boolean handle(Supplier<NetworkEvent.Context> ctxSupplier) {
+		Player player = ClientBetterDiving.getPlayer();
+		// player.getCapability(CapabilityOxygenProvider.OXYGEN).ifPresent(cap -> cap.setOxygen(this.oxygen));
 		return true;
 	}
 

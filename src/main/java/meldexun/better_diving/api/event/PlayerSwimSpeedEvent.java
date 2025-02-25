@@ -1,21 +1,21 @@
 package meldexun.better_diving.api.event;
 
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.eventbus.api.Event;
 
 public class PlayerSwimSpeedEvent extends Event {
 
-	private final PlayerEntity player;
+	private final Player player;
 	private final double originalSwimSpeed;
 	private double newSwimSpeed;
 
-	public PlayerSwimSpeedEvent(PlayerEntity player, double originalSwimSpeed) {
+	public PlayerSwimSpeedEvent(Player player, double originalSwimSpeed) {
 		this.player = player;
 		this.originalSwimSpeed = originalSwimSpeed;
 		this.newSwimSpeed = originalSwimSpeed;
 	}
 
-	public PlayerEntity getPlayer() {
+	public Player getPlayer() {
 		return this.player;
 	}
 

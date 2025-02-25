@@ -6,9 +6,10 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import meldexun.better_diving.config.BetterDivingConfig;
-import net.minecraft.entity.Entity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class DivingGearManager {
 
@@ -20,49 +21,49 @@ public class DivingGearManager {
 
 	public static void reloadConfigs() {
 		oxygenProviderEntityMap.clear();
-		for (String s : BetterDivingConfig.SERVER_CONFIG.oxygenProviderEntities.get()) {
-			OxygenProviderEntity oxygenProviderEntity = OxygenProviderEntity.parse(s);
-			if (oxygenProviderEntity != null) {
-				oxygenProviderEntityMap.computeIfAbsent(oxygenProviderEntity.registryName, key -> oxygenProviderEntity);
-			}
-		}
-
-		divingMaskProviderItemMap.clear();
-		for (String s : BetterDivingConfig.SERVER_CONFIG.divingMaskProviderItems.get()) {
-			DivingMaskProviderItem divingMaskProviderItem = DivingMaskProviderItem.parse(s);
-			if (divingMaskProviderItem != null) {
-				divingMaskProviderItemMap.computeIfAbsent(divingMaskProviderItem.registryName, key -> divingMaskProviderItem);
-			}
-		}
-
-		oxygenProviderItemMap.clear();
-		for (String s : BetterDivingConfig.SERVER_CONFIG.oxygenProviderItems.get()) {
-			OxygenProviderItem oxygenProviderItem = OxygenProviderItem.parse(s);
-			if (oxygenProviderItem != null) {
-				oxygenProviderItemMap.computeIfAbsent(oxygenProviderItem.registryName, key -> oxygenProviderItem);
-			}
-		}
-
-		miningspeedProviderItemMap.clear();
-		for (String s : BetterDivingConfig.SERVER_CONFIG.miningspeedProviderItems.get()) {
-			MiningspeedProviderItem miningspeedProviderItem = MiningspeedProviderItem.parse(s);
-			if (miningspeedProviderItem != null) {
-				miningspeedProviderItemMap.computeIfAbsent(miningspeedProviderItem.registryName, key -> miningspeedProviderItem);
-			}
-		}
-
-		swimspeedProviderItemMap.clear();
-		for (String s : BetterDivingConfig.SERVER_CONFIG.swimspeedProviderItems.get()) {
-			SwimspeedProviderItem swimspeedProviderItem = SwimspeedProviderItem.parse(s);
-			if (swimspeedProviderItem != null) {
-				swimspeedProviderItemMap.computeIfAbsent(swimspeedProviderItem.registryName, key -> swimspeedProviderItem);
-			}
-		}
+		// for (String s : BetterDivingConfig.SERVER_CONFIG.oxygenProviderEntities.get()) {
+		// 	OxygenProviderEntity oxygenProviderEntity = OxygenProviderEntity.parse(s);
+		// 	if (oxygenProviderEntity != null) {
+		// 		oxygenProviderEntityMap.computeIfAbsent(oxygenProviderEntity.registryName, key -> oxygenProviderEntity);
+		// 	}
+		// }
+		//
+		// divingMaskProviderItemMap.clear();
+		// for (String s : BetterDivingConfig.SERVER_CONFIG.divingMaskProviderItems.get()) {
+		// 	DivingMaskProviderItem divingMaskProviderItem = DivingMaskProviderItem.parse(s);
+		// 	if (divingMaskProviderItem != null) {
+		// 		divingMaskProviderItemMap.computeIfAbsent(divingMaskProviderItem.registryName, key -> divingMaskProviderItem);
+		// 	}
+		// }
+		//
+		// oxygenProviderItemMap.clear();
+		// for (String s : BetterDivingConfig.SERVER_CONFIG.oxygenProviderItems.get()) {
+		// 	OxygenProviderItem oxygenProviderItem = OxygenProviderItem.parse(s);
+		// 	if (oxygenProviderItem != null) {
+		// 		oxygenProviderItemMap.computeIfAbsent(oxygenProviderItem.registryName, key -> oxygenProviderItem);
+		// 	}
+		// }
+		//
+		// miningspeedProviderItemMap.clear();
+		// for (String s : BetterDivingConfig.SERVER_CONFIG.miningspeedProviderItems.get()) {
+		// 	MiningspeedProviderItem miningspeedProviderItem = MiningspeedProviderItem.parse(s);
+		// 	if (miningspeedProviderItem != null) {
+		// 		miningspeedProviderItemMap.computeIfAbsent(miningspeedProviderItem.registryName, key -> miningspeedProviderItem);
+		// 	}
+		// }
+		//
+		// swimspeedProviderItemMap.clear();
+		// for (String s : BetterDivingConfig.SERVER_CONFIG.swimspeedProviderItems.get()) {
+		// 	SwimspeedProviderItem swimspeedProviderItem = SwimspeedProviderItem.parse(s);
+		// 	if (swimspeedProviderItem != null) {
+		// 		swimspeedProviderItemMap.computeIfAbsent(swimspeedProviderItem.registryName, key -> swimspeedProviderItem);
+		// 	}
+		// }
 	}
 
 	@Nullable
 	public static OxygenProviderEntity getOxygenProviderEntity(Entity entity) {
-		return oxygenProviderEntityMap.get(entity.getType().getRegistryName());
+		return oxygenProviderEntityMap.get(ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()));
 	}
 
 	@Nullable
@@ -70,7 +71,7 @@ public class DivingGearManager {
 		if (stack.isEmpty()) {
 			return null;
 		}
-		return divingMaskProviderItemMap.get(stack.getItem().getRegistryName());
+		return divingMaskProviderItemMap.get(ForgeRegistries.ITEMS.getKey(stack.getItem()));
 	}
 
 	@Nullable
@@ -78,7 +79,7 @@ public class DivingGearManager {
 		if (stack.isEmpty()) {
 			return null;
 		}
-		return oxygenProviderItemMap.get(stack.getItem().getRegistryName());
+		return oxygenProviderItemMap.get(ForgeRegistries.ITEMS.getKey(stack.getItem()));
 	}
 
 	@Nullable
@@ -86,7 +87,7 @@ public class DivingGearManager {
 		if (stack.isEmpty()) {
 			return null;
 		}
-		return miningspeedProviderItemMap.get(stack.getItem().getRegistryName());
+		return miningspeedProviderItemMap.get(ForgeRegistries.ITEMS.getKey(stack.getItem()));
 	}
 
 	@Nullable
@@ -94,7 +95,7 @@ public class DivingGearManager {
 		if (stack.isEmpty()) {
 			return null;
 		}
-		return swimspeedProviderItemMap.get(stack.getItem().getRegistryName());
+		return swimspeedProviderItemMap.get(ForgeRegistries.ITEMS.getKey(stack.getItem()));
 	}
 
 }

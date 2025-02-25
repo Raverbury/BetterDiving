@@ -3,12 +3,12 @@ package meldexun.better_diving.event;
 import meldexun.better_diving.BetterDiving;
 import meldexun.better_diving.client.ClientBetterDiving;
 import meldexun.better_diving.config.BetterDivingConfig;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.MovementInput;
+import net.minecraft.client.player.Input;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.InputUpdateEvent;
+import net.minecraftforge.client.event.MovementInputUpdateEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -17,15 +17,15 @@ public class PlayerSwimmingEventHandler {
 
 	@OnlyIn(Dist.CLIENT)
 	@SubscribeEvent
-	public static void onInputUpdateEvent(InputUpdateEvent event) {
-		PlayerEntity player = event.getPlayer();
+	public static void onInputUpdateEvent(MovementInputUpdateEvent event) {
+		Player player = event.getEntity();
 
-		if (player.level.isClientSide()) {
+		if (player.level().isClientSide()) {
 			player.yya = 0.0F;
 
 			if (BetterDivingConfig.SERVER_CONFIG.movementChanges.get()) {
 				if (player.isInWater()) {
-					MovementInput input = ((ClientPlayerEntity) player).input;
+					Input input = ((LocalPlayer) player).input;
 					if (input.jumping) {
 						player.yya += 1.0F;
 					}

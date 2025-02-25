@@ -1,8 +1,8 @@
 package meldexun.better_diving.client.util;
 
+import com.mojang.blaze3d.platform.Window;
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -17,7 +17,7 @@ public class BetterDivingGuiHelper {
 	}
 
 	public static int getAnchorX(int width, int anchor, int offsetX) {
-		MainWindow mainWindow = Minecraft.getInstance().getWindow();
+		Window mainWindow = Minecraft.getInstance().getWindow();
 
 		if (anchor == 1 || anchor == 4) {
 			// top mid or bot mid
@@ -31,7 +31,7 @@ public class BetterDivingGuiHelper {
 	}
 
 	public static int getAnchorY(int height, int anchor, int offsetY) {
-		MainWindow mainWindow = Minecraft.getInstance().getWindow();
+		Window mainWindow = Minecraft.getInstance().getWindow();
 
 		if (anchor == 3 || anchor == 4 || anchor == 5) {
 			// bot right or bot mid or bot left

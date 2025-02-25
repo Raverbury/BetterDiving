@@ -1,6 +1,6 @@
 package meldexun.better_diving.capability;
 
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
@@ -11,7 +11,8 @@ public abstract class BasicCapabilityProvider<C> implements ICapabilityProvider 
 	public final Capability<C> capability;
 	public final LazyOptional<C> instance;
 
-	public BasicCapabilityProvider(Capability<C> capability, NonNullSupplier<C> instanceSupplier) {
+	public BasicCapabilityProvider(Capability<C> capability,
+                                   NonNullSupplier<C> instanceSupplier) {
 		this.capability = capability;
 		this.instance = LazyOptional.of(instanceSupplier);
 	}
@@ -20,5 +21,4 @@ public abstract class BasicCapabilityProvider<C> implements ICapabilityProvider 
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		return cap == this.capability ? this.instance.cast() : LazyOptional.empty();
 	}
-
 }

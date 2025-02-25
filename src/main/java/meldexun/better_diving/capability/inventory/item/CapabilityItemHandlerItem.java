@@ -1,8 +1,8 @@
 package meldexun.better_diving.capability.inventory.item;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class CapabilityItemHandlerItem extends ItemStackHandler {
@@ -13,8 +13,8 @@ public class CapabilityItemHandlerItem extends ItemStackHandler {
 	public CapabilityItemHandlerItem(ItemStack stack, int size) {
 		super(size);
 		this.stack = stack;
-		CompoundNBT nbt = this.stack.getOrCreateTag();
-		if (nbt.contains(CapabilityItemHandlerItemProvider.REGISTRY_NAME.toString(), Constants.NBT.TAG_COMPOUND)) {
+		CompoundTag nbt = this.stack.getOrCreateTag();
+		if (nbt.contains(CapabilityItemHandlerItemProvider.REGISTRY_NAME.toString(), Tag.TAG_INT)) {
 			this.deserializeNBT(null);
 		} else {
 			this.serializeNBT();
@@ -30,16 +30,19 @@ public class CapabilityItemHandlerItem extends ItemStackHandler {
 	}
 
 	@Override
-	public CompoundNBT serializeNBT() {
-		CompoundNBT nbt = this.stack.getOrCreateTag();
+	public CompoundTag serializeNBT() {
+		CompoundTag nbt = this.stack.getOrCreateTag();
 		nbt.put(CapabilityItemHandlerItemProvider.REGISTRY_NAME.toString(), super.serializeNBT());
-		return null;
+		return nbt;
 	}
 
 	@Override
-	public void deserializeNBT(CompoundNBT nbt) {
-		CompoundNBT nbt1 = this.stack.getOrCreateTag();
-		super.deserializeNBT(nbt1.getCompound(CapabilityItemHandlerItemProvider.REGISTRY_NAME.toString()));
+	public void deserializeNBT(CompoundTag nbt) {
+		if (nbt == null) {
+			nbt = this.stack.getOrCreateTag();
+		}
+		// CompoundTag nbt1 = this.stack.getOrCreateTag();
+		super.deserializeNBT(nbt.getCompound(CapabilityItemHandlerItemProvider.REGISTRY_NAME.toString()));
 		this.hasBeenDeserialized = true;
 	}
 

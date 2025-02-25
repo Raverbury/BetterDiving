@@ -1,6 +1,6 @@
 package meldexun.better_diving.api.event;
 
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.eventbus.api.Event;
 
 /**
@@ -10,15 +10,15 @@ import net.minecraftforge.eventbus.api.Event;
 @Deprecated
 public class PlayerCanBreathEvent extends Event {
 
-	private final PlayerEntity player;
+	private final Player player;
 	private boolean canBreath;
 
-	public PlayerCanBreathEvent(PlayerEntity player, boolean canBreath) {
+	public PlayerCanBreathEvent(Player player, boolean canBreath) {
 		this.player = player;
 		this.canBreath = canBreath;
 	}
 
-	public PlayerEntity getPlayer() {
+	public Player getPlayer() {
 		return this.player;
 	}
 

@@ -53,9 +53,9 @@ public class BetterDivingConfig {
 		public final UnderwaterVisuals underwaterVisuals;
 
 		public ServerConfig(ForgeConfigSpec.Builder builder) {
-			this.breakSpeedChanges = builder.comment("").define("breakSpeedChanges", true);
-			this.movementChanges = builder.comment("").define("movementChanges", true);
-			this.oxygenChanges = builder.comment("").define("oxygenChanges", true);
+			this.breakSpeedChanges = builder.comment("comment").define("breakSpeedChanges", true);
+			this.movementChanges = builder.comment("comment").define("movementChanges", true);
+			this.oxygenChanges = builder.comment("comment").define("oxygenChanges", true);
 
 			this.oxygenProviderEntities = builder.comment("modid:entity, oxygenCapacity").defineList("oxygenProviderEntities", Lists.newArrayList(), o -> true);
 			this.divingMaskProviderItems = builder.comment("modid:item, maxDivingDepth").defineList("divingMaskProviderItems", Lists.newArrayList("better_diving:diving_mask, 40", "better_diving:rebreather, 60", "better_diving:reinforced_diving_mask, 40"), o -> true);
@@ -86,7 +86,7 @@ public class BetterDivingConfig {
 			public final ForgeConfigSpec.DoubleValue breakSpeedBase;
 
 			public Mining(ForgeConfigSpec.Builder builder) {
-				builder.comment("").push("mining");
+				builder.comment("comment").push("mining");
 
 				this.breakSpeedAquaAffinity = builder.comment("Break speed modifier underwater with the Aqua Affinity enchantment. (Vanilla = 5.0)").defineInRange("breakSpeedAquaAffinity", 1.25D, 0.0D, 10.0D);
 				this.breakSpeedBase = builder.comment("Base break speed in water. (Vanilla = 0.2)").defineInRange("breakSpeedBase", 1.0D, 0.0D, 10.0D);
@@ -129,7 +129,7 @@ public class BetterDivingConfig {
             public final ForgeConfigSpec.BooleanValue weakerSneakDescending;
 
 			public Movement(ForgeConfigSpec.Builder builder) {
-				builder.comment("").push("movement");
+				builder.comment("comment").push("movement");
 
 				this.baseSwimSpeed = builder.comment("Base swim speed. (Vanilla = 0.02)").defineInRange("baseSwimSpeed", 0.04D, 0.0D, 1.0D);
 
@@ -144,19 +144,19 @@ public class BetterDivingConfig {
 
 				this.hungerModifier = builder.comment("Enable/Disable swim speed penalty when having low hunger.").define("hungerModifier", true);
 				this.hungerThreshold = builder.comment("Hunger threshold at which the swim speed will start to decrease. (Example with hungerThreshold = 0.2 hungerAmount = -0.5: swimSpeedPenalty at 0.1 hunger = -0.0,  swimSpeedPenalty at 0.1 hunger = -0.25,  swimSpeedPenalty at 0.0 hunger = -0.5)").defineInRange("hungerThreshold", 0.2D, 0.0D, 1.0D);
-				this.hungerAmount = builder.comment("").defineInRange("hungerAmount", -0.5D, -1.0D, 1.0D);
+				this.hungerAmount = builder.comment("comment").defineInRange("hungerAmount", -0.5D, -1.0D, 1.0D);
 				this.hungerOperation = builder.comment("0 = add, 1 = multiply_base, 2 = mulitply (For more info check the minecraft wiki: https://minecraft.fandom.com/wiki/Attribute#Operations)").defineInRange("hungerOperation", 2, 0, 2);
 
 				this.mainhandModifier = builder.comment("Enable/Disable swim speed penalty when holding an item in the mainhand.").define("mainhandModifier", true);
-				this.mainhandAmount = builder.comment("").defineInRange("mainhandAmount", -0.05D, -1.0D, 1.0D);
+				this.mainhandAmount = builder.comment("comment").defineInRange("mainhandAmount", -0.05D, -1.0D, 1.0D);
 				this.mainhandOperation = builder.comment("0 = add, 1 = multiply_base, 2 = mulitply (For more info check the minecraft wiki: https://minecraft.fandom.com/wiki/Attribute#Operations)").defineInRange("mainhandOperation", 2, 0, 2);
 
 				this.offhandModifier = builder.comment("Enable/Disable swim speed penalty when holding an item in the offhand.").define("offhandModifier", true);
-				this.offhandAmount = builder.comment("").defineInRange("offhandAmount", -0.05D, -1.0D, 1.0D);
+				this.offhandAmount = builder.comment("comment").defineInRange("offhandAmount", -0.05D, -1.0D, 1.0D);
 				this.offhandOperation = builder.comment("0 = add, 1 = multiply_base, 2 = mulitply (For more info check the minecraft wiki: https://minecraft.fandom.com/wiki/Attribute#Operations)").defineInRange("offhandOperation", 2, 0, 2);
 
 				this.overwaterModifier = builder.comment("Enable/Disable swim speed bonus when swimming at the water surface.").define("overwaterModifier", true);
-				this.overwaterAmount = builder.comment("").defineInRange("overwaterAmount", 0.2D, -1.0D, 1.0D);
+				this.overwaterAmount = builder.comment("comment").defineInRange("overwaterAmount", 0.2D, -1.0D, 1.0D);
 				this.overwaterOperation = builder.comment("0 = add, 1 = multiply_base, 2 = mulitply (For more info check the minecraft wiki: https://minecraft.fandom.com/wiki/Attribute#Operations)").defineInRange("overwaterOperation", 1, 0, 2);
 
 				this.weakerSneakDescending = builder.comment("When enabled sneaking in water only let's you descend slowly. The idea is that when you are in water you can still use items that require you to sneak without descending too far. Note that you can always use the descend key (default C) to descend while in water.").define("weakerSneakDescending", false);
@@ -173,7 +173,7 @@ public class BetterDivingConfig {
 			public final OreConfig shale;
 
 			public Ores(ForgeConfigSpec.Builder builder) {
-				builder.comment("").push("ores");
+				builder.comment("comment").push("ores");
 
 				this.limestone = new OreConfig(builder, "limestone", true, 1, 0, 2, 0, 64);
 				this.sandstone = new OreConfig(builder, "sandstone", true, 1, 0, 1, 0, 40);
@@ -192,14 +192,14 @@ public class BetterDivingConfig {
 				public final ForgeConfigSpec.IntValue maxHeight;
 
 				public OreConfig(ForgeConfigSpec.Builder builder, String name, boolean enabled, int chance, int minAmount, int maxAmount, int minHeight, int maxHeight) {
-					builder.comment("").push(name);
+					builder.comment("comment").push(name);
 
-					this.enabled = builder.comment("").define("enabled", enabled);
-					this.chance = builder.comment("").defineInRange("chance", chance, 0, 1024);
-					this.minAmount = builder.comment("").defineInRange("minAmount", minAmount, 0, 1024);
-					this.maxAmount = builder.comment("").defineInRange("maxAmount", maxAmount, 0, 1024);
-					this.minHeight = builder.comment("").defineInRange("minHeight", minHeight, -1024, 1024);
-					this.maxHeight = builder.comment("").defineInRange("maxHeight", maxHeight, -1024, 1024);
+					this.enabled = builder.comment("comment").define("enabled", enabled);
+					this.chance = builder.comment("comment").defineInRange("chance", chance, 0, 1024);
+					this.minAmount = builder.comment("minAmount").defineInRange("minAmount", minAmount, 0, 1024);
+					this.maxAmount = builder.comment("maxAmount").defineInRange("maxAmount", maxAmount, 0, 1024);
+					this.minHeight = builder.comment("minHeight").defineInRange("minHeight", minHeight, -1024, 1024);
+					this.maxHeight = builder.comment("maxHeight").defineInRange("maxHeight", maxHeight, -1024, 1024);
 
 					builder.pop();
 				}
@@ -218,14 +218,14 @@ public class BetterDivingConfig {
 			public final ForgeConfigSpec.IntValue oxygenRefillRate;
 
 			public Oxygen(ForgeConfigSpec.Builder builder) {
-				builder.comment("").push("oxygen");
+				builder.comment("comment").push("oxygen");
 
 				this.oxygenBaseDivingDepth = builder.comment("Base diving depth. (Check 'oxygenEfficiencyRate' for more information)").defineInRange("oxygenBaseDivingDepth", 20, 0, 1024);
 				this.oxygenCapacity = builder.comment("Base oxygen capacity in ticks. (20 ticks = 1 second)").defineInRange("oxygenCapacity", 900, 0, 1_000_000);
-				this.oxygenCapacityRespiration = builder.comment("").defineInRange("oxygenCapacityRespiration", 300, 0, 1_000_000);
+				this.oxygenCapacityRespiration = builder.comment("comment").defineInRange("oxygenCapacityRespiration", 300, 0, 1_000_000);
 				this.oxygenEfficiency = builder.comment("Enable/Disable decreased oxygen efficiency while diving deeper.").define("oxygenEfficiency", true);
 				this.oxygenEfficiencyRate = builder.comment("Every x blocks below the max diving depth (defined by 'oxygenBaseDivingDepth' and equipment) consumes one unit of oxygen more per second.").defineInRange("oxygenEfficiencyRate", 4, 1, 1024);
-				this.oxygenRefillRate = builder.comment("").defineInRange("oxygenRefillRate", 25, 1, 100);
+				this.oxygenRefillRate = builder.comment("oxygenRefillRate").defineInRange("oxygenRefillRate", 25, 1, 100);
 
 				builder.pop();
 			}
@@ -238,7 +238,7 @@ public class BetterDivingConfig {
 			public final ForgeConfigSpec.IntValue seamothEnergyUsage;
 
 			public Seamoth(ForgeConfigSpec.Builder builder) {
-				builder.comment("").push("seamoth");
+				builder.comment("comment").push("seamoth");
 
 				this.seamothSpeed = builder.comment("Speed of the seamoth. (blocks per second = x * 400)").defineInRange("seamothSpeed", 0.0275D, 0.0D, 1.0D);
 				this.seamothEnergyUsage = builder.comment("Energy usage of the seamoth per tick.").defineInRange("seamothEnergyUsage", 100, 0, 1_000_000);
@@ -256,12 +256,12 @@ public class BetterDivingConfig {
 			public final ForgeConfigSpec.IntValue energy;
 
 			public EnergyStorageItem(ForgeConfigSpec.Builder builder, String name, int capacity, int maxReceive, int maxExtract, int energy) {
-				builder.comment("").push(name);
+				builder.comment("comment").push(name);
 
-				this.capacity = builder.comment("").defineInRange("capacity", capacity, 0, Integer.MAX_VALUE);
-				this.maxReceive = builder.comment("").defineInRange("maxReceive", maxReceive, 0, Integer.MAX_VALUE);
-				this.maxExtract = builder.comment("").defineInRange("maxExtract", maxExtract, 0, Integer.MAX_VALUE);
-				this.energy = builder.comment("").defineInRange("energy", energy, 0, Integer.MAX_VALUE);
+				this.capacity = builder.comment("capacity").defineInRange("capacity", capacity, 0, Integer.MAX_VALUE);
+				this.maxReceive = builder.comment("maxReceive").defineInRange("maxReceive", maxReceive, 0, Integer.MAX_VALUE);
+				this.maxExtract = builder.comment("maxExtract").defineInRange("maxExtract", maxExtract, 0, Integer.MAX_VALUE);
+				this.energy = builder.comment("maxExtract").defineInRange("energy", energy, 0, Integer.MAX_VALUE);
 
 				builder.pop();
 			}
@@ -277,13 +277,13 @@ public class BetterDivingConfig {
 			public final ForgeConfigSpec.DoubleValue knockbackResistance;
 
 			public ArmorValues(ForgeConfigSpec.Builder builder, String name, int durability, int enchantability, Integer[] protection, double toughness, double knockbackResistance) {
-				builder.comment("").push(name);
+				builder.comment("comment").push(name);
 
-				this.durability = builder.comment("").defineInRange("durability", durability, 0, 1_000_000);
-				this.enchantability = builder.comment("").defineInRange("enchantability", enchantability, 0, 1000);
-				this.protection = builder.comment("").defineList("protection", Arrays.asList(protection), o -> true);
-				this.toughness = builder.comment("").defineInRange("toughness", toughness, 0.0D, 1000.0D);
-				this.knockbackResistance = builder.comment("").defineInRange("knockbackResistance", knockbackResistance, -1.0D, 1.0D);
+				this.durability = builder.comment("comment").defineInRange("durability", durability, 0, 1_000_000);
+				this.enchantability = builder.comment("comment").defineInRange("enchantability", enchantability, 0, 1000);
+				this.protection = builder.comment("comment").defineList("protection", Arrays.asList(protection), o -> true);
+				this.toughness = builder.comment("comment").defineInRange("toughness", toughness, 0.0D, 1000.0D);
+				this.knockbackResistance = builder.comment("comment").defineInRange("knockbackResistance", knockbackResistance, -1.0D, 1.0D);
 
 				builder.pop();
 			}
@@ -300,7 +300,7 @@ public class BetterDivingConfig {
 			public final ForgeConfigSpec.DoubleValue fogBrightnessNight;
 
 			public UnderwaterVisuals(ForgeConfigSpec.Builder builder) {
-				builder.comment("").push("underwater_visuals");
+				builder.comment("comment").push("underwater_visuals");
 
 				this.brightnessDay = builder.comment("(Vanilla = 0.0)").defineInRange("brightnessDay", 0.3D, 0.0D, 1.0D);
 				this.brightnessNight = builder.comment("(Vanilla = 0.0)").defineInRange("brightnessNight", 0.1D, 0.0D, 1.0D);
@@ -338,20 +338,25 @@ public class BetterDivingConfig {
 
 		public ClientConfig(ForgeConfigSpec.Builder builder) {
 			this.oxygenGuiAnchor = builder.comment("0: top-left, 1: top-middle, 2: top-right, 3: bottom-right, 4: bottom-middle, 5: bottom-left").defineInRange("oxygenGuiAnchor", 4, 0, 5);
-			this.oxygenGuiEnabled = builder.comment("").define("oxygenGuiEnabled", true);
-			this.oxygenGuiOffsetX = builder.comment("").defineInRange("oxygenGuiOffsetX", 62, -1000, 1000);
-			this.oxygenGuiOffsetY = builder.comment("").defineInRange("oxygenGuiOffsetY", -32, -1000, 1000);
+			this.oxygenGuiEnabled = builder.comment("oxygenGuiEnabled").define("oxygenGuiEnabled", true);
+			this.oxygenGuiOffsetX = builder.comment("oxygenGuiOffsetX").defineInRange("oxygenGuiOffsetX", 62, -1000, 1000);
+			this.oxygenGuiOffsetY = builder.comment("oxygenGuiOffsetY").defineInRange("oxygenGuiOffsetY", -32, -1000, 1000);
 			this.oxygenGuiRenderAlways = builder.comment("If enabled the oxygen gui will always be rendered.").define("oxygenGuiRenderAlways", false);
 			this.oxygenGuiRenderNotFull = builder.comment("If enabled the oxygen gui will be rendered when current oxygen is less than the oxygen capacity.").define("oxygenGuiRenderNotFull", true);
 			this.oxygenGuiRenderUnderwater = builder.comment("If enabled the oxygen gui will be rendered when underwater.").define("oxygenGuiRenderUnderwater", true);
 
 			this.seamothGuiAnchor = builder.comment("0: top-left, 1: top-middle, 2: top-right, 3: bottom-right, 4: bottom-middle, 5: bottom-left").defineInRange("seamothGuiAnchor", 3, 0, 5);
-			this.seamothGuiEnabled = builder.comment("").define("seamothGuiEnabled", true);
-			this.seamothGuiOffsetX = builder.comment("").defineInRange("seamothGuiOffsetX", -4, -1000, 1000);
-			this.seamothGuiOffsetY = builder.comment("").defineInRange("seamothGuiOffsetY", -8, -1000, 1000);
+			this.seamothGuiEnabled = builder.comment("seamothGuiEnabled?").define(
+					"seamothGuiEnabled", true);
+			this.seamothGuiOffsetX = builder.comment("seamothGuiOffsetX").defineInRange(
+					"seamothGuiOffsetX", -4, -1000, 1000);
+			this.seamothGuiOffsetY =
+					builder.comment("seamothGuiOffsetY").defineInRange(
+					"seamothGuiOffsetY", -8, -1000, 1000);
 
 			this.seaLevelOverride = builder.comment("When enabled a custom sea level can be set using the 'seaLevel' option.").define("seaLevelOverride", false);
-			this.seaLevel = builder.comment("").defineInRange("seaLevel", 64, -1024, 1024);
+			this.seaLevel = builder.comment("seaLevel").defineInRange("seaLevel", 64
+					, -1024, 1024);
 			this.skipSkyRenderingUnderwater = builder.comment("When enabled and the player is underwater and below the sea level then the sky rendering will be skipped.").define("skipSkyRenderingInWater", true);
 			this.skipSkyRenderingBelowSealevel = builder.comment("When enabled and the player is below the sea level then the sky rendering will be skipped.").define("skipSkyRenderingBelowSealevel", false);
 		}

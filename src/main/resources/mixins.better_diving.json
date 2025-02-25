@@ -5,8 +5,6 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "mixins.better_diving.refmap.json",
   "mixins": [
-    "MixinOxygenSystem",
-    "MixinWorldRenderer"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -2,20 +2,21 @@ package meldexun.better_diving.client.audio;
 
 import meldexun.better_diving.entity.EntitySeamoth;
 import meldexun.better_diving.init.BetterDivingSounds;
-import net.minecraft.client.audio.TickableSound;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.joml.Math;
 
 @OnlyIn(Dist.CLIENT)
-public class SeamothStartSound extends TickableSound {
+public class SeamothStartSound extends AbstractTickableSoundInstance {
 
 	private EntitySeamoth seamoth;
 	private boolean stop;
 	private int tick = 10;
 
 	public SeamothStartSound(EntitySeamoth seamoth) {
-		super(BetterDivingSounds.SEAMOTH_START.get(), seamoth.getSoundSource());
+		super(BetterDivingSounds.SEAMOTH_START.get(),
+				seamoth.getSoundSource(), seamoth.level().getRandom());
 		this.seamoth = seamoth;
 		this.volume = 1.0F;
 		this.pitch = 1.0F;
@@ -24,7 +25,7 @@ public class SeamothStartSound extends TickableSound {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void tick() {
-		if (this.seamoth.removed || this.tick < 0) {
+		if (this.seamoth.isRemoved() || this.tick < 0) {
 			this.stop();
 		} else {
 			this.x = this.seamoth.getX();
@@ -38,7 +39,7 @@ public class SeamothStartSound extends TickableSound {
 				this.tick--;
 			}
 
-			this.volume = 0.25F * MathHelper.clamp(this.tick / 10.0F, 0.0F, 1.0F);
+			this.volume = 0.25F * Math.clamp(this.tick / 10.0F, 0.0F, 1.0F);
 		}
 	}
 

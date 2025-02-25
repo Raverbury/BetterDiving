@@ -4,15 +4,16 @@ import java.util.EnumSet;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlot;
 
 public class DivingMaskProviderItem extends AbstractDivingGear {
 
 	public final int maxDivingDepth;
 
-	public DivingMaskProviderItem(ResourceLocation registryName, int maxDivingDepth) {
-		super(registryName, EnumSet.of(EquipmentSlotType.HEAD));
+	public DivingMaskProviderItem(ResourceLocation registryName,
+								  int maxDivingDepth) {
+		super(registryName, EnumSet.of(EquipmentSlot.HEAD));
 		this.maxDivingDepth = maxDivingDepth;
 	}
 

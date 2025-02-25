@@ -4,15 +4,17 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlot;
 
 public class OxygenProviderItem extends AbstractDivingGear {
 
 	public final int oxygenCapacity;
 	public final boolean needsDivingMask;
 
-	public OxygenProviderItem(ResourceLocation registryName, Set<EquipmentSlotType> slots, int oxygenCapacity, boolean needsDivingMask) {
+	public OxygenProviderItem(ResourceLocation registryName,
+							  Set<EquipmentSlot> slots, int oxygenCapacity,
+							  boolean needsDivingMask) {
 		super(registryName, slots);
 		this.oxygenCapacity = oxygenCapacity;
 		this.needsDivingMask = needsDivingMask;
@@ -26,7 +28,7 @@ public class OxygenProviderItem extends AbstractDivingGear {
 				configArray[i] = configArray[i].trim();
 			}
 			ResourceLocation registryName = new ResourceLocation(configArray[0]);
-			Set<EquipmentSlotType> slots = parseValidSlots(configArray, 1);
+			Set<EquipmentSlot> slots = parseValidSlots(configArray, 1);
 			int oxygenCapacity = Integer.parseInt(configArray[7]);
 			boolean needsDivingMask = Boolean.parseBoolean(configArray[8]);
 			return new OxygenProviderItem(registryName, slots, oxygenCapacity, needsDivingMask);

@@ -2,7 +2,7 @@ package meldexun.better_diving.oxygenprovider;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 public class OxygenProviderEntity {
 

@@ -6,13 +6,13 @@ import meldexun.better_diving.client.ClientBetterDiving;
 import meldexun.better_diving.entity.EntitySeamoth;
 import meldexun.better_diving.item.ItemEnergyStorage;
 import meldexun.better_diving.network.packet.IPacket;
-import net.minecraft.entity.Entity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.world.World;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.network.NetworkEvent;
 
 public class SPacketSyncSeamothEnergy implements IPacket {
 
@@ -25,7 +25,8 @@ public class SPacketSyncSeamothEnergy implements IPacket {
 
 	public SPacketSyncSeamothEnergy(EntitySeamoth seamoth) {
 		this.entityId = seamoth.getId();
-		LazyOptional<IItemHandler> optionalItemHandler = seamoth.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+		LazyOptional<IItemHandler> optionalItemHandler =
+				seamoth.getCapability(ForgeCapabilities.ITEM_HANDLER);
 		if (optionalItemHandler.isPresent()) {
 			IItemHandler itemHandler = optionalItemHandler.orElseThrow(NullPointerException::new);
 			this.energy = ItemEnergyStorage.getEnergy(itemHandler.getStackInSlot(0));
@@ -33,21 +34,21 @@ public class SPacketSyncSeamothEnergy implements IPacket {
 	}
 
 	@Override
-	public void encode(PacketBuffer buffer) {
+	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeInt(this.entityId);
 		buffer.writeInt(this.energy);
 	}
 
 	@Override
-	public void decode(PacketBuffer buffer) {
+	public void decode(FriendlyByteBuf buffer) {
 		this.entityId = buffer.readInt();
 		this.energy = buffer.readInt();
 	}
 
 	@Override
-	public boolean handle(Supplier<Context> ctxSupplier) {
+	public boolean handle(Supplier<NetworkEvent.Context> ctxSupplier) {
 		ctxSupplier.get().enqueueWork(() -> {
-			World world = ClientBetterDiving.getWorld();
+			Level world = ClientBetterDiving.getLevel();
 			Entity entity = world.getEntity(this.entityId);
 			if (entity instanceof EntitySeamoth) {
 				EntitySeamoth seamoth = (EntitySeamoth) entity;

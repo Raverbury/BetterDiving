@@ -1,43 +1,19 @@
 package meldexun.better_diving.client.event;
 
 import java.text.DecimalFormat;
-import java.util.List;
 
 import meldexun.better_diving.BetterDiving;
-import meldexun.better_diving.capability.oxygen.item.CapabilityOxygenItemProvider;
-import meldexun.better_diving.client.gui.GuiOxygen;
 import meldexun.better_diving.client.gui.GuiSeamoth;
 import meldexun.better_diving.config.BetterDivingConfig;
 import meldexun.better_diving.entity.EntitySeamoth;
-import meldexun.better_diving.integration.BeyondEarth;
 import meldexun.better_diving.network.packet.client.CPacketOpenSeamothInventory;
-import meldexun.better_diving.oxygenprovider.DivingGearManager;
-import meldexun.better_diving.oxygenprovider.DivingMaskProviderItem;
-import meldexun.better_diving.oxygenprovider.MiningspeedProviderItem;
-import meldexun.better_diving.oxygenprovider.SwimspeedProviderItem;
-import meldexun.better_diving.util.OxygenPlayerHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.entity.Entity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tags.FluidTags;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.biome.Biome;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.EntityViewRenderEvent;
-import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.event.RenderGuiOverlayEvent;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = BetterDiving.MOD_ID, value = Dist.CLIENT)
@@ -46,77 +22,67 @@ public class ClientEventHandler {
 	private static final DecimalFormat FORMAT = new DecimalFormat("#.##");
 
 	@SubscribeEvent(priority = EventPriority.LOW)
-	public static void onRenderGameOverlayEventPre(RenderGameOverlayEvent.Pre event) {
+	public static void onRenderGameOverlayEventPre(RenderGuiOverlayEvent.Pre event) {
 		Minecraft mc = Minecraft.getInstance();
-		if (event.getType() == ElementType.AIR && BetterDivingConfig.CLIENT_CONFIG.oxygenGuiEnabled.get()) {
+		if (event.getOverlay().equals(VanillaGuiOverlay.AIR_LEVEL.type())) {
 			event.setCanceled(true);
 
 			if (shouldRenderOxygen()) {
-				GuiOxygen.render(event.getMatrixStack());
+				// GuiOxygen.render(event.getGuiGraphics().pose());
 			}
 		}
-		if (event.getType() == ElementType.ALL && BetterDivingConfig.CLIENT_CONFIG.seamothGuiEnabled.get() && mc.player.getVehicle() instanceof EntitySeamoth) {
-			GuiSeamoth.render(event.getMatrixStack());
-		}
-		if (event.getType() == ElementType.HOTBAR && mc.player.getVehicle() instanceof EntitySeamoth) {
-			// event.setCanceled(true);
-			// HotbarSeamoth.render(event.getMatrixStack());
+		if (event.getOverlay().equals(VanillaGuiOverlay.CROSSHAIR.type()) && BetterDivingConfig.CLIENT_CONFIG.seamothGuiEnabled.get() && mc.player.getVehicle() instanceof EntitySeamoth) {
+			// GuiSeamoth.render(event.getGuiGraphics().pose());
 		}
 	}
 
 	private static boolean shouldRenderOxygen() {
-		if (BetterDivingConfig.CLIENT_CONFIG.oxygenGuiRenderAlways.get()) {
-			return true;
-		}
-		Minecraft mc = Minecraft.getInstance();
-		if (ModList.get().isLoaded("boss_tools")
-				&& BeyondEarth.isSpace(mc.level)) {
-			return false;
-		}
-		if (BetterDivingConfig.CLIENT_CONFIG.oxygenGuiRenderUnderwater.get()
-				&& mc.player.isEyeInFluid(FluidTags.WATER)) {
-			return true;
-		}
-		return BetterDivingConfig.CLIENT_CONFIG.oxygenGuiRenderNotFull.get()
-				&& OxygenPlayerHelper.getOxygenRespectEquipment(mc.player) < OxygenPlayerHelper.getOxygenCapacityRespectEquipment(mc.player);
+		return false;
+		// if (BetterDivingConfig.CLIENT_CONFIG.oxygenGuiRenderAlways.get()) {
+		// 	return true;
+		// }
+		// Minecraft mc = Minecraft.getInstance();
+		// if (ModList.get().isLoaded("boss_tools")
+		// 		&& BeyondEarth.isSpace(mc.level)) {
+		// 	return false;
+		// }
+		// if (BetterDivingConfig.CLIENT_CONFIG.oxygenGuiRenderUnderwater.get()
+		// 		&& mc.player.isEyeInFluidType(Fluids.WATER.getFluidType())) {
+		// 	return true;
+		// }
+		// return BetterDivingConfig.CLIENT_CONFIG.oxygenGuiRenderNotFull.get()
+		// 		&& OxygenPlayerHelper.getOxygenRespectEquipment(mc.player) < OxygenPlayerHelper.getOxygenCapacityRespectEquipment(mc.player);
 	}
 
-	@SubscribeEvent
-	public static void onFOVModifierEvent(EntityViewRenderEvent.FOVModifier event) {
-		if (!event.getInfo().getFluidInCamera().isEmpty()) {
-			event.setFOV(event.getFOV() * 7.0D / 6.0D);
-		}
-	}
-
-	@SubscribeEvent
-	public static void onItemTooltipEvent(ItemTooltipEvent event) {
-		List<ITextComponent> tooltip = event.getToolTip();
-		ItemStack stack = event.getItemStack();
-
-		DivingMaskProviderItem divingMaskProvider = DivingGearManager.getDivingMaskProviderItem(stack);
-		if (divingMaskProvider != null) {
-			tooltip.add(1, new StringTextComponent(TextFormatting.GRAY + String.format("Max Diving Depth %dm", divingMaskProvider.maxDivingDepth)));
-		}
-
-		stack.getCapability(CapabilityOxygenItemProvider.OXYGEN).ifPresent(c -> {
-			tooltip.add(1, new StringTextComponent(TextFormatting.GRAY + Integer.toString((int) Math.round(c.getOxygen() / 20.0D / 3.0D) * 3) + "s of Oxygen"));
-		});
-
-		MiningspeedProviderItem miningSpeedProvider = DivingGearManager.getMiningspeedProviderItem(stack);
-		if (miningSpeedProvider != null) {
-			tooltip.add(1, new StringTextComponent(TextFormatting.GRAY + (miningSpeedProvider.miningspeed >= 0.0D ? "+" : "") + FORMAT.format(miningSpeedProvider.miningspeed * 100.0D) + "% Mining Speed"));
-		}
-
-		SwimspeedProviderItem swimspeedProvider = DivingGearManager.getSwimspeedProviderItem(stack);
-		if (swimspeedProvider != null) {
-			tooltip.add(1, new StringTextComponent(TextFormatting.GRAY + (swimspeedProvider.swimspeed >= 0.0D ? "+" : "") + FORMAT.format(swimspeedProvider.swimspeed * 100.0D) + "% Swim Speed"));
-		}
-	}
+	// @SubscribeEvent
+	// public static void onItemTooltipEvent(ItemTooltipEvent event) {
+	// 	List<ITextComponent> tooltip = event.getToolTip();
+	// 	ItemStack stack = event.getItemStack();
+	//
+	// 	DivingMaskProviderItem divingMaskProvider = DivingGearManager.getDivingMaskProviderItem(stack);
+	// 	if (divingMaskProvider != null) {
+	// 		tooltip.add(1, new StringTextComponent(TextFormatting.GRAY + String.format("Max Diving Depth %dm", divingMaskProvider.maxDivingDepth)));
+	// 	}
+	//
+	// 	stack.getCapability(CapabilityOxygenItemProvider.OXYGEN).ifPresent(c -> {
+	// 		tooltip.add(1, new StringTextComponent(TextFormatting.GRAY + Integer.toString((int) Math.round(c.getOxygen() / 20.0D / 3.0D) * 3) + "s of Oxygen"));
+	// 	});
+	//
+	// 	MiningspeedProviderItem miningSpeedProvider = DivingGearManager.getMiningspeedProviderItem(stack);
+	// 	if (miningSpeedProvider != null) {
+	// 		tooltip.add(1, new StringTextComponent(TextFormatting.GRAY + (miningSpeedProvider.miningspeed >= 0.0D ? "+" : "") + FORMAT.format(miningSpeedProvider.miningspeed * 100.0D) + "% Mining Speed"));
+	// 	}
+	//
+	// 	SwimspeedProviderItem swimspeedProvider = DivingGearManager.getSwimspeedProviderItem(stack);
+	// 	if (swimspeedProvider != null) {
+	// 		tooltip.add(1, new StringTextComponent(TextFormatting.GRAY + (swimspeedProvider.swimspeed >= 0.0D ? "+" : "") + FORMAT.format(swimspeedProvider.swimspeed * 100.0D) + "% Swim Speed"));
+	// 	}
+	// }
 
 	//private static final ReflectionMethod<?> KEY_BINDING_UNPRESS_KEY = new ReflectionMethod<>(KeyBinding.class, "?", "unpressKey");
 
 	@SubscribeEvent
-	public static void onKeyInputEvent(KeyInputEvent event) {
+	public static void onKeyInputEvent(InputEvent.InteractionKeyMappingTriggered event) {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.player != null && mc.player.getVehicle() instanceof EntitySeamoth) {
 			if (mc.options.keyInventory.consumeClick()) {
@@ -539,74 +505,7 @@ public class ClientEventHandler {
 	}
 	*/
 
-	@SubscribeEvent
-	public static void onFogColorEvent(EntityViewRenderEvent.FogColors event) {
-		Minecraft mc = Minecraft.getInstance();
-		float partialTicks = mc.getFrameTime();
-		ActiveRenderInfo activeRenderInfo = event.getInfo();
-		FluidState fluidState = activeRenderInfo.getFluidInCamera();
-		
-		if (!fluidState.is(FluidTags.WATER)) {
-			return;
-		}
-
-		BetterDivingConfig.ServerConfig.UnderwaterVisuals config = BetterDivingConfig.SERVER_CONFIG.underwaterVisuals;
-		float f = mc.level.getSkyDarken(partialTicks);
-		f = MathHelper.clamp((f - 0.2F) / 0.8F, 0.0F, 1.0F);
-		float fogBrightness = (float) MathHelper.lerp(f, config.fogBrightnessNight.get(), config.fogBrightnessDay.get());
-		event.setRed(event.getRed() * fogBrightness);
-		event.setGreen(event.getGreen() * fogBrightness);
-		event.setBlue(event.getBlue() * fogBrightness);
-	}
-
 	private static float fogBiomeFactor;
 	private static float fogBiomeFactorTarget;
 	private static long fogBiomeLastUpdate;
-
-	@SubscribeEvent
-	public static void onFogDensityEvent(EntityViewRenderEvent.FogDensity event) {
-		Minecraft mc = Minecraft.getInstance();
-		float partialTicks = mc.getFrameTime();
-		ActiveRenderInfo activeRenderInfo = event.getInfo();
-		FluidState fluidstate = activeRenderInfo.getFluidInCamera();
-
-		if (!fluidstate.is(FluidTags.WATER)) {
-			fogBiomeLastUpdate = -1L;
-			return;
-		}
-
-		Entity entity = activeRenderInfo.getEntity();
-		BetterDivingConfig.ServerConfig.UnderwaterVisuals config = BetterDivingConfig.SERVER_CONFIG.underwaterVisuals;
-		float f = mc.level.getSkyDarken(partialTicks);
-		f = MathHelper.clamp((f - 0.2F) / 0.8F, 0.0F, 1.0F);
-		float fogDensity = (float) MathHelper.lerp(f, config.fogDensityNight.get(), config.fogDensityDay.get());
-
-		if (entity instanceof ClientPlayerEntity) {
-			ClientPlayerEntity clientplayerentity = (ClientPlayerEntity) entity;
-			fogDensity += (1.0F - clientplayerentity.getWaterVision()) * 0.01F;
-
-			Biome biome = clientplayerentity.level.getBiome(clientplayerentity.blockPosition());
-			long time = Util.getMillis();
-			float f1 = biome.getBiomeCategory() == Biome.Category.SWAMP ? 0.005F : 0.0F;
-			if (fogBiomeLastUpdate < 0L) {
-				fogBiomeFactor = f1;
-				fogBiomeFactorTarget = f1;
-				fogBiomeLastUpdate = time;
-			}
-
-			float f2 = MathHelper.clamp((float) (time - fogBiomeLastUpdate) / 3000.0F, 0.0F, 1.0F);
-			float f3 = MathHelper.lerp(f2, fogBiomeFactor, fogBiomeFactorTarget);
-
-			if (f1 != fogBiomeFactorTarget) {
-				fogBiomeFactor = f3;
-				fogBiomeFactorTarget = f1;
-				fogBiomeLastUpdate = time;
-			}
-			fogDensity += f3;
-		}
-
-		event.setCanceled(true);
-		event.setDensity(fogDensity);
-	}
-
 }
