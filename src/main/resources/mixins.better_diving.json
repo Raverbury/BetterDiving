@@ -5,6 +5,8 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "mixins.better_diving.refmap.json",
   "mixins": [
+    "AccessorEntity",
+    "MixinLivingEntity"
   ],
   "injectors": {
     "defaultRequire": 1

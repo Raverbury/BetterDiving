@@ -44,9 +44,8 @@ public class RenderSeamoth extends EntityRenderer<EntitySeamoth> {
         poseStack.pushPose();
 
         if (mc.options.getCameraType() == CameraType.FIRST_PERSON) {
-            poseStack.translate(0.0D, player.getEyeHeight(), 0.0D);
+            poseStack.translate(0.0D, 0.8125D, 0.0D);
             this.setupRotation(entityIn, partialTicks, poseStack);
-            poseStack.translate(0.0D, 0.8125D - player.getEyeHeight(), -0.16D);
         } else {
             poseStack.translate(0.0D, 0.8125D, 0.0D);
             this.setupRotation(entityIn, partialTicks, poseStack);

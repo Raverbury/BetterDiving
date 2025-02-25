@@ -1,15 +1,13 @@
 package meldexun.better_diving.entity;
 
 import meldexun.better_diving.BetterDiving;
-import meldexun.better_diving.capability.inventory.item.CapabilityItemHandlerItem;
-import meldexun.better_diving.capability.inventory.item.CapabilityItemHandlerItemProvider;
 import meldexun.better_diving.client.ClientBetterDiving;
 import meldexun.better_diving.client.audio.SeamothEngineLoopSound;
 import meldexun.better_diving.client.audio.SeamothStartSound;
 import meldexun.better_diving.config.BetterDivingConfig;
 import meldexun.better_diving.init.BetterDivingItems;
 import meldexun.better_diving.init.BetterDivingSounds;
-import meldexun.better_diving.inventory.container.ContainerSeamothItem;
+import meldexun.better_diving.inventory.container.ContainerSeamothEntity;
 import meldexun.better_diving.item.ItemEnergyStorage;
 import meldexun.better_diving.item.ItemPowerCell;
 import meldexun.better_diving.network.packet.client.CPacketSyncSeamothInput;
@@ -32,8 +30,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.animal.Chicken;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -251,12 +247,12 @@ public class EntitySeamoth extends Entity implements IEntityAdditionalSpawnData 
         if (!this.level().isClientSide()) {
             if (player.isShiftKeyDown()) {
                 player.openMenu(new SimpleMenuProvider(
-                        (id, playerInv, player2) -> new ContainerSeamothItem(id, playerInv,
-                                player.getItemInHand(hand), hand),
+                        (id, playerInv, player2) -> new ContainerSeamothEntity(id,
+                                playerInv,
+                                this),
                         Component.translatable("Seamoth")));
             } else {
                 player.startRiding(this);
-
             }
         }
         return InteractionResult.SUCCESS;
@@ -284,7 +280,12 @@ public class EntitySeamoth extends Entity implements IEntityAdditionalSpawnData 
 
     @Override
     public double getPassengersRidingOffset() {
-        return 0.1D;
+        return 0.03D;
+    }
+
+    @Override
+    public MovementEmission getMovementEmission() {
+        return MovementEmission.NONE;
     }
 
     @Override

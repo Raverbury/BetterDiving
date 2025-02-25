@@ -26,9 +26,6 @@ public class BetterDivingBlocks {
     public static final RegistryObject<Block> TITANIUM_BLOCK = BLOCKS.register(
             "titanium_block", () -> new Block(
                     BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)));
-    public static final RegistryObject<Block> COPPER_BLOCK = BLOCKS.register(
-            "copper_block", () -> new Block(
-                    BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)));
     public static final RegistryObject<Block> SILVER_BLOCK = BLOCKS.register(
             "silver_block", () -> new Block(
                     BlockBehaviour.Properties.copy(

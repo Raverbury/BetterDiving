@@ -121,6 +121,12 @@ repositories {
     // flatDir {
     //     dir 'libs'
     // }
+    maven {
+        url "https://www.cursemaven.com"
+//        content {
+//            includeGroup "curse.maven"
+//        }
+    }
 }
 
 dependencies {
@@ -135,7 +141,7 @@ dependencies {
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
     // compileOnly fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
     // compileOnly fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")
-    // runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
+    // runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
 
     // Example mod dependency using a mod jar from ./libs with a flat dir repository
     // This maps to ./libs/coolmod-${mc_version}-${coolmod_version}.jar
@@ -148,6 +154,19 @@ dependencies {
 	
 	// Apply Mixin AP
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+
+    // MixinExtra
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))
+    implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.4.1")) {
+        jarJar.ranged(it, "[0.4.1,)")
+    }
+
+    // JEI
+    runtimeOnly fg.deobf("curse.maven:jei-238222:6075247")
+    // Mekanism
+    runtimeOnly fg.deobf("curse.maven:mekanism-268560:6123077")
+    // Mekanism generator
+    runtimeOnly fg.deobf("curse.maven:mekanism-generators-268566:6123081")
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

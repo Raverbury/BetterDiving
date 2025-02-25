@@ -25,7 +25,7 @@ public class ClientEventHandler {
 	public static void onRenderGameOverlayEventPre(RenderGuiOverlayEvent.Pre event) {
 		Minecraft mc = Minecraft.getInstance();
 		if (event.getOverlay().equals(VanillaGuiOverlay.AIR_LEVEL.type())) {
-			event.setCanceled(true);
+			// event.setCanceled(true);
 
 			if (shouldRenderOxygen()) {
 				// GuiOxygen.render(event.getGuiGraphics().pose());

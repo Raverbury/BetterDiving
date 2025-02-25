@@ -79,6 +79,7 @@ public class ItemSeamoth extends Item {
                                 look);
 
                 seamoth.setPos(vec.x, vec.y, vec.z);
+                seamoth.setYRot(playerIn.getYRot());
                 worldIn.addFreshEntity(seamoth);
 
                 if (worldIn.getFluidState(seamoth.blockPosition())

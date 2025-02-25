@@ -3,7 +3,7 @@
   "ingredient": {
   "item": "better_diving:copper_chunk"
   },
-  "result": "better_diving:copper_ingot",
+  "result": "minecraft:copper_ingot",
   "experience": 1.0,
   "cookingtime": 200
 }
