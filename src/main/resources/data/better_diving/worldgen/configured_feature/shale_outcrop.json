@@ -1,0 +1,12 @@
+{
+  "type": "better_diving:ocean_ravine",
+  "config": {
+    "block": "better_diving:shale_outcrop",
+    "enabled": true,
+    "chance": 1,
+    "min_amount": 5,
+    "max_amount": 11,
+    "min_height": -50,
+    "max_height": 45
+  }
+}

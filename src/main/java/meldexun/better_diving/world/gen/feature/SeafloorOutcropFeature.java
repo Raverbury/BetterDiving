@@ -8,7 +8,6 @@ import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
@@ -26,26 +25,26 @@ public class SeafloorOutcropFeature extends Feature<OceanOreFeatureConfig> {
     public boolean place(FeaturePlaceContext<OceanOreFeatureConfig> featurePlaceContext) {
         OceanOreFeatureConfig config =
                 featurePlaceContext.config();
-        if (!config.getConfig().enabled.get()) {
+        if (!config.enabled) {
             return false;
         }
         RandomSource rand = featurePlaceContext.random();
-        if (config.getConfig().chance.get() > 0 && rand.nextInt(
-                config.getConfig().chance.get()) != 0) {
+        if (config.chance > 0 && rand.nextInt(
+                config.chance) != 0) {
             return false;
         }
         BlockPos pos = featurePlaceContext.origin();
         WorldGenLevel reader = featurePlaceContext.level();
         int i = 0;
-        int j = config.sample(rand);
+        int j = config.getRandomAmount(rand);
 
         for (int k = 0; k < j; k++) {
-            for (int l = 0; l < 4; l++) {
+            for (int l = 0; l < 1; l++) {
                 int x = rand.nextInt(8) - rand.nextInt(8);
                 int z = rand.nextInt(8) - rand.nextInt(8);
                 int yCenter = reader.getHeight(Heightmap.Types.OCEAN_FLOOR,
                         pos.getX() + x, pos.getZ() + z);
-                if (yCenter > config.getConfig().maxHeight.get()) {
+                if (yCenter > config.maxHeight) {
                     continue;
                 }
                 int yNorth = reader.getHeight(Heightmap.Types.OCEAN_FLOOR,
@@ -58,12 +57,12 @@ public class SeafloorOutcropFeature extends Feature<OceanOreFeatureConfig> {
                         pos.getX() + x - 1, pos.getZ() + z);
                 int yMax = Math.max(Math.max(yNorth, ySouth),
                         Math.max(yEast, yWest));
-                if (yMax < config.getConfig().minHeight.get()) {
+                if (yMax < config.minHeight) {
                     continue;
                 }
                 int yMin = Math.max(yCenter,
-                        config.getConfig().minHeight.get());
-                yMax = Math.min(yMax, config.getConfig().maxHeight.get());
+                        config.minHeight);
+                yMax = Math.min(yMax, config.maxHeight);
                 int y = yMax > yMin ? yMin + rand.nextInt(yMax - yMin) : yMin;
 
                 BlockPos p = new BlockPos(pos.getX() + x, y, pos.getZ() + z);
@@ -84,10 +83,13 @@ public class SeafloorOutcropFeature extends Feature<OceanOreFeatureConfig> {
                     list.add(Direction.EAST);
                 }
                 Direction dir = list.get(rand.nextInt(list.size()));
+                Direction oppositeDir = dir.getOpposite();
+                BlockPos attachTo = p.relative(oppositeDir);
                 BlockState state = config.getBlock().defaultBlockState()
                         .setValue(
                                 BlockStateProperties.FACING, dir);
-                if (reader.getBlockState(p)
+                if (reader.getBlockState(attachTo).isFaceSturdy(reader,
+                        attachTo, oppositeDir) && reader.getBlockState(p)
                         .is(Blocks.WATER) && state.canSurvive(reader, p)) {
                     reader.setBlock(p, state, 2);
                     i++;

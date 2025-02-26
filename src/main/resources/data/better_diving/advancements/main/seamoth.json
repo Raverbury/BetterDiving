@@ -1,0 +1,40 @@
+{
+  "parent": "better_diving:main/root",
+  "criteria": {
+    "has_seamoth": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "better_diving:seamoth"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancement.better_diving.seamoth.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "better_diving:seamoth"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.better_diving.seamoth"
+    }
+  },
+  "requirements": [
+    [
+      "has_seamoth"
+    ]
+  ],
+  "rewards": {
+    "experience": 200
+  }
+}

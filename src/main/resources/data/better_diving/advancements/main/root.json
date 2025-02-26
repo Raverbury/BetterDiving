@@ -1,0 +1,29 @@
+{
+  "criteria": {
+    "empty": {
+      "conditions": {},
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "background": "minecraft:textures/block/sand.png",
+    "description": {
+      "translate": "advancement.better_diving.root.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:kelp"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "advancement.better_diving.root"
+    }
+  },
+  "requirements": [
+    [
+      "empty"
+    ]
+  ]
+}

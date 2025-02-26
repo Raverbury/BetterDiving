@@ -85,8 +85,9 @@ public class BetterDivingHelper {
             Vec3 vecForward = fromPitchYaw(forward < 0.0D ? -pitch : pitch,
                     forward < 0.0D ? yaw + 180.0D : yaw).scale(
                     Math.abs(forward));
-            Vec3 vecUp = fromPitchYaw(pitch + (up < 0.0D ? 90.0D : -90.0D),
-                    yaw).scale(Math.abs(up));
+            // Vec3 vecUp = fromPitchYaw(pitch + (up < 0.0D ? 90.0D : -90.0D),
+            //         yaw).scale(Math.abs(up));
+            Vec3 vecUp = new Vec3(0f, up, 0f).scale(Math.abs(up));
             Vec3 vecStrafe = fromPitchYaw(0.0D,
                     yaw + (strafe < 0.0D ? 90.0D : -90.0D)).scale(
                     Math.abs(strafe));

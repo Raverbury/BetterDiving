@@ -13,8 +13,6 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class RavineOutcropFeature extends Feature<OceanOreFeatureConfig> {
@@ -27,70 +25,46 @@ public class RavineOutcropFeature extends Feature<OceanOreFeatureConfig> {
     public boolean place(FeaturePlaceContext<OceanOreFeatureConfig> featurePlaceContext) {
         OceanOreFeatureConfig config =
                 featurePlaceContext.config();
-        if (!config.getConfig().enabled.get()) {
+        if (!config.enabled) {
             return false;
         }
         RandomSource rand = featurePlaceContext.random();
-        if (config.getConfig().chance.get() > 0 && rand
-                .nextInt(config.getConfig().chance.get()) != 0) {
+        if (config.chance > 0 && rand
+                .nextInt(config.chance) != 0) {
             return false;
         }
         ChunkGenerator generator = featurePlaceContext.chunkGenerator();
         BlockPos pos = featurePlaceContext.origin();
         WorldGenLevel reader = featurePlaceContext.level();
         int i = 0;
-        int j = config.sample(rand);
+        int j = config.getRandomAmount(rand);
 
         for (int k = 0; k < j; k++) {
-            for (int l = 0; l < 16; l++) {
+            for (int l = 0; l < 1; l++) {
                 int x = rand.nextInt(8) - rand.nextInt(8);
                 int z = rand.nextInt(8) - rand.nextInt(8);
-                int height = generator.getBaseHeight(pos.getX() + x,
-                        pos.getZ() + z, Heightmap.Types.OCEAN_FLOOR,
-                        reader.getLevel().getChunkAt(pos)
-                                .getHeightAccessorForGeneration(),
-                        reader.getLevel().getChunkSource().randomState());
-                if (height <= reader.getLevel().getMinBuildHeight() + 10) {
-                    continue;
-                }
-                int y = 1 + rand.nextInt(height - 1);
-                if (y < config.getConfig().minHeight.get()) {
-                    continue;
-                }
-                if (y > config.getConfig().maxHeight.get()) {
-                    continue;
-                }
+                int yMax = reader.getHeight(Heightmap.Types.OCEAN_FLOOR,
+                        pos.getX() + x, pos.getZ() + z) - 1;
+                yMax = Math.min(yMax, config.maxHeight);
+                int yMin = Math.max(reader.getLevel().getMinBuildHeight() + 10,
+                        config.minHeight);
+                int y = yMax > yMin ? yMin + rand.nextInt(yMax - yMin) : yMin;
+
                 BlockPos p = new BlockPos(pos.getX() + x, y, pos.getZ() + z);
-                if (!reader.getBlockState(p).is(Blocks.WATER)) {
-                    continue;
-                }
-                boolean flag = false;
-                for (int x1 = -1; x1 <= 1; x1++) {
-                    for (int z1 = -1; z1 <= 1; z1++) {
-                        if (y > reader.getHeight(Heightmap.Types.OCEAN_FLOOR,
-                                p.getX() + x1, p.getZ() + z1)) {
-                            flag = true;
-                            break;
-                        }
-                    }
-                    if (flag) {
-                        break;
-                    }
-                }
-                if (!flag) {
-                    continue;
-                }
-                List<Direction> list = new ArrayList<>();
-                list.add(Direction.UP);
-                list.add(Direction.NORTH);
-                list.add(Direction.SOUTH);
-                list.add(Direction.EAST);
-                list.add(Direction.WEST);
-                Collections.shuffle(list);
-                for (Direction d : list) {
+                List<Direction> directions = List.of(Direction.UP,
+                        Direction.SOUTH, Direction.NORTH, Direction.WEST,
+                        Direction.EAST, Direction.DOWN);
+                for (Direction attachDirection : directions) {
+                    Direction facingDirection = attachDirection.getOpposite();
+                    BlockPos attachTo = p.relative(attachDirection);
                     BlockState state = config.getBlock().defaultBlockState()
-                            .setValue(BlockStateProperties.FACING, d);
-                    if (state.canSurvive(reader, p)) {
+                            .setValue(
+                                    BlockStateProperties.FACING,
+                                    facingDirection);
+                    if (reader.getBlockState(attachTo).isFaceSturdy(reader,
+                            attachTo, facingDirection) && reader.getBlockState(
+                                    p)
+                            .is(Blocks.WATER) && state.canSurvive(reader, p)) {
                         reader.setBlock(p, state, 2);
                         i++;
                         break;
@@ -100,4 +74,83 @@ public class RavineOutcropFeature extends Feature<OceanOreFeatureConfig> {
         }
         return i > 0;
     }
+
+    // @Override
+    // public boolean place(FeaturePlaceContext<OceanOreFeatureConfig> featurePlaceContext) {
+    //     OceanOreFeatureConfig config =
+    //             featurePlaceContext.config();
+    //     if (!config.enabled) {
+    //         return false;
+    //     }
+    //     RandomSource rand = featurePlaceContext.random();
+    //     if (config.chance > 0 && rand
+    //             .nextInt(config.chance) != 0) {
+    //         return false;
+    //     }
+    //     ChunkGenerator generator = featurePlaceContext.chunkGenerator();
+    //     BlockPos pos = featurePlaceContext.origin();
+    //     WorldGenLevel reader = featurePlaceContext.level();
+    //     int i = 0;
+    //     int j = config.getRandomAmount(rand);
+    //
+    //     for (int k = 0; k < j; k++) {
+    //         for (int l = 0; l < 2; l++) {
+    //             int x = rand.nextInt(8) - rand.nextInt(8);
+    //             int z = rand.nextInt(8) - rand.nextInt(8);
+    //             int height = generator.getBaseHeight(pos.getX() + x,
+    //                     pos.getZ() + z, Heightmap.Types.OCEAN_FLOOR,
+    //                     reader.getLevel().getChunkAt(pos)
+    //                             .getHeightAccessorForGeneration(),
+    //                     reader.getLevel().getChunkSource().randomState());
+    //             if (height <= reader.getLevel().getMinBuildHeight() + 10) {
+    //                 continue;
+    //             }
+    //             int y = 1 + rand.nextInt(height - 1);
+    //             if (y < config.minHeight) {
+    //                 continue;
+    //             }
+    //             if (y > config.maxHeight) {
+    //                 continue;
+    //             }
+    //             BlockPos p = new BlockPos(pos.getX() + x, y, pos.getZ() + z);
+    //             if (!reader.getBlockState(p).is(Blocks.WATER)) {
+    //                 continue;
+    //             }
+    //             boolean flag = false;
+    //             for (int x1 = -1; x1 <= 1; x1++) {
+    //                 for (int z1 = -1; z1 <= 1; z1++) {
+    //                     if (y > reader.getHeight(Heightmap.Types.OCEAN_FLOOR,
+    //                             p.getX() + x1, p.getZ() + z1)) {
+    //                         flag = true;
+    //                         break;
+    //                     }
+    //                 }
+    //                 if (flag) {
+    //                     break;
+    //                 }
+    //             }
+    //             if (!flag) {
+    //                 continue;
+    //             }
+    //             List<Direction> list = new ArrayList<>();
+    //             list.add(Direction.UP);
+    //             list.add(Direction.NORTH);
+    //             list.add(Direction.SOUTH);
+    //             list.add(Direction.EAST);
+    //             list.add(Direction.WEST);
+    //             Collections.shuffle(list);
+    //             for (Direction d : list) {
+    //                 BlockState state = config.getBlock().defaultBlockState()
+    //                         .setValue(BlockStateProperties.FACING, d);
+    //                 if (reader.getBlockState(p)
+    //                         .is(Blocks.WATER) && state.canSurvive(reader, p)) {
+    //                     reader.setBlock(p, state, 2);
+    //                     i++;
+    //                     break;
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     return i > 0;
+    // }
 }

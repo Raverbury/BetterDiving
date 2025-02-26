@@ -1,5 +1,6 @@
 package meldexun.better_diving.block;
 
+import meldexun.better_diving.init.BetterDivingSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -41,7 +42,7 @@ public class BlockUnderwaterOre extends Block implements SimpleWaterloggedBlock 
     }
 
     public BlockUnderwaterOre() {
-        super(Block.Properties.copy(Blocks.SAND));
+        super(Block.Properties.copy(Blocks.SAND).sound(BetterDivingSounds.OUTCROP_SOUNDS));
         this.registerDefaultState(this.stateDefinition.any().setValue(
                         BlockStateProperties.FACING,
                         Direction.UP).setValue(ROTATION, 0)

@@ -52,5 +52,9 @@
   "block.better_diving.lead_block": "Lead Block",
   "block.better_diving.lithium_block": "Lithium Block",
 
-  "entity.better_diving.seamoth": "Seamoth"
+  "entity.better_diving.seamoth": "Seamoth",
+  "advancement.better_diving.root": "Better Get To Diving",
+  "advancement.better_diving.root.desc": "A thank you to Meldexun for making the original amazing mod.",
+  "advancement.better_diving.seamoth": "Subnautical Voyage",
+  "advancement.better_diving.seamoth.desc": "Construct the Seamoth."
 }

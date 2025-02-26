@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "features": "better_diving:shale_outcrop",
+  "biomes": "#minecraft:is_overworld",
+  "step": "underground_ores"
+}

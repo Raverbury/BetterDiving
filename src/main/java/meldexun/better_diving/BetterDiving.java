@@ -10,7 +10,6 @@ import org.apache.logging.log4j.Logger;
 
 import meldexun.better_diving.api.BetterDivingModules;
 import meldexun.better_diving.config.BetterDivingConfig;
-import meldexun.better_diving.event.FeatureEventHandler;
 import meldexun.better_diving.oxygenprovider.DivingGearManager;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -41,13 +40,12 @@ public class BetterDiving {
 		BetterDivingContainers.registerContainers();
 		BetterDivingSounds.registerSounds();
 		BetterDivingFeatures.registerFeatures();
-		BetterDivingCreativeTab.registercreativetabs();
+		BetterDivingCreativeTab.registerCreativeTabs();
 	}
 
 	private void setup(FMLCommonSetupEvent event) {
 		BetterDivingCapabilities.registerCapabilities();
 		BetterDivingPackets.registerPackets();
-		FeatureEventHandler.registerConfiguredFeatures();
 	}
 
 	private void updateConfig(ModConfigEvent event) {

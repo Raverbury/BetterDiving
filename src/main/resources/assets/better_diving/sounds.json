@@ -1,37 +1,86 @@
 {
-  "seamoth_engine_loop": {
-    "category": "master",
-    "sounds": [
-      {
-        "name": "better_diving:seamoth_engine_loop",
-        "stream": true
-      }
-    ]
-  },
-  "seamoth_enter": {
-    "category": "master",
-    "sounds": [
-      {
-        "name": "better_diving:seamoth_enter",
-        "volume": 0.5
-      }
-    ]
-  },
-  "seamoth_start": {
-    "category": "master",
-    "sounds": [
-      {
-        "name": "better_diving:seamoth_start",
-        "volume": 0.5
-      }
-    ]
-  },
-  "seamoth_impact": {
-    "category": "master",
-    "sounds": [
-      "better_diving:seamoth_impact_1",
-      "better_diving:seamoth_impact_2",
-      "better_diving:seamoth_impact_3"
-    ]
-  }
+    "seamoth_engine_loop": {
+        "category": "neutral",
+        "sounds": [
+            {
+                "name": "better_diving:seamoth_engine_loop",
+                "stream": true
+            }
+        ]
+    },
+    "seamoth_enter": {
+        "category": "neutral",
+        "sounds": [
+            {
+                "name": "better_diving:seamoth_enter",
+                "volume": 0.5
+            }
+        ]
+    },
+    "seamoth_start": {
+        "category": "neutral",
+        "sounds": [
+            {
+                "name": "better_diving:seamoth_start",
+                "volume": 0.5
+            }
+        ]
+    },
+    "seamoth_welcome": {
+        "category": "neutral",
+        "sounds": [
+            {
+                "name": "better_diving:seamoth_welcome",
+                "volume": 0.3
+            }
+        ]
+    },
+    "seamoth_no_power": {
+        "category": "neutral",
+        "sounds": [
+            {
+                "name": "better_diving:seamoth_no_power",
+                "volume": 0.3
+            }
+        ]
+    },
+    "outcrop_hit": {
+        "category": "block",
+        "sounds": [
+            {
+                "name": "better_diving:hit_1",
+                "volume": 0.6
+            },
+            {
+                "name": "better_diving:hit_2",
+                "volume": 0.6
+            },
+            {
+                "name": "better_diving:hit_3",
+                "volume": 0.6
+            },
+            {
+                "name": "better_diving:hit_4",
+                "volume": 0.6
+            }
+        ]
+    },
+    "outcrop_break": {
+        "category": "block",
+        "sounds": [
+            {
+                "name": "better_diving:break",
+                "volume": 0.6
+            }
+        ]
+    },
+    "advancement_seamoth": {
+        "category": "player",
+        "sounds": [
+            {
+                "name": "better_diving:advancement_seamoth",
+                "volume": 0.5
+            }
+        ]
+    }
 }

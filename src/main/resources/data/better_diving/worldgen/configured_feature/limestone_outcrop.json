@@ -1,0 +1,12 @@
+{
+  "type": "better_diving:ocean_floor",
+  "config": {
+    "block": "better_diving:limestone_outcrop",
+    "enabled": true,
+    "chance": 1,
+    "min_amount": 0,
+    "max_amount": 1,
+    "min_height": 10,
+    "max_height": 62
+  }
+}

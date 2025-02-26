@@ -65,6 +65,8 @@ public class EntitySeamoth extends Entity implements IEntityAdditionalSpawnData 
     private boolean prevControlled = false;
     private boolean prevSteered = false;
     private int prevEnergy;
+    private long prevWelcomeTimestamp = 0;
+    private boolean prevWelcomeHasEnergy = true;
 
     public EntitySeamoth(EntityType<?> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
@@ -247,7 +249,8 @@ public class EntitySeamoth extends Entity implements IEntityAdditionalSpawnData 
         if (!this.level().isClientSide()) {
             if (player.isShiftKeyDown()) {
                 player.openMenu(new SimpleMenuProvider(
-                        (id, playerInv, player2) -> new ContainerSeamothEntity(id,
+                        (id, playerInv, player2) -> new ContainerSeamothEntity(
+                                id,
                                 playerInv,
                                 this),
                         Component.translatable("Seamoth")));
@@ -275,6 +278,26 @@ public class EntitySeamoth extends Entity implements IEntityAdditionalSpawnData 
                     this.blockPosition(),
                     BetterDivingSounds.SEAMOTH_ENTER.get(),
                     this.getSoundSource(), 1.0F, 1.0F);
+            // play seamoth welcome/no power sound
+            long currentTimestamp = this.level().getGameTime();
+            boolean hasEnergy = this.hasEnergy();
+            // 75 seconds
+            long soundInterval = 1500;
+            // shorter interval if hasEnergy is different
+            if (hasEnergy != prevWelcomeHasEnergy) {
+                // 1 seconds
+                soundInterval = 20;
+            }
+            if (currentTimestamp - prevWelcomeTimestamp > soundInterval) {
+                this.level().playSound((Player) passenger,
+                        this.blockPosition(),
+                        hasEnergy?
+                                BetterDivingSounds.SEAMOTH_WELCOME.get() :
+                                BetterDivingSounds.SEAMOTH_NO_POWER.get(),
+                        this.getSoundSource(), 1.0F, 1.0F);
+                prevWelcomeTimestamp = currentTimestamp;
+                prevWelcomeHasEnergy = hasEnergy;
+            }
         }
     }
 

@@ -8,7 +8,6 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -24,14 +23,23 @@ public class BetterDivingCreativeTab {
                                             " Diving")).icon(() -> new ItemStack(
                                     BetterDivingItems.SEAMOTH.get()))
                             .displayItems((params, output) -> {
-                                // custom powercell with energy cap
+                                // the rest
+                                for (var item :
+                                        BetterDivingItems.ITEMS.getEntries()) {
+                                    output.accept(item.get());
+                                }
+                                for (var block :
+                                        BetterDivingBlocks.BLOCKS.getEntries()) {
+                                    output.accept(block.get());
+                                }
+                                // custom powercell with energy cap, 0 energy
                                 ItemStack powerCellStack = new ItemStack(
                                         BetterDivingItems.POWER_CELL.get());
                                 powerCellStack.getCapability(
                                                 ForgeCapabilities.ENERGY)
                                         .ifPresent(c -> {
                                             ((IEnergyStorageExtended) c).setEnergy(
-                                                    1000000);
+                                                    0);
                                         });
                                 output.accept(powerCellStack);
                                 // custom seamoth with item cap and power
@@ -42,23 +50,17 @@ public class BetterDivingCreativeTab {
                                 seamothStack.getCapability(
                                                 ForgeCapabilities.ITEM_HANDLER)
                                         .ifPresent(c -> {
-                                            ((ItemStackHandler) c).setStackInSlot(
+                                            BetterDiving.LOGGER.info(
+                                                    "Creativetab seamoth has " +
+                                                            "cap");
+                                            c.insertItem(
                                                     0, new ItemStack(
-                                                            BetterDivingItems.POWER_CELL.get()));
+                                                            BetterDivingItems.POWER_CELL.get()), false);
                                         });
                                 output.accept(seamothStack);
-                                // the rest
-                                for (var item :
-                                        BetterDivingItems.ITEMS.getEntries()) {
-                                    output.accept(item.get());
-                                }
-                                for (var block :
-                                        BetterDivingBlocks.BLOCKS.getEntries()) {
-                                    output.accept(block.get());
-                                }
                             }).build());
 
-    public static void registercreativetabs() {
+    public static void registerCreativeTabs() {
         CREATIVE_MODE_TAB_DEFERRED_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 }

@@ -1,115 +1,74 @@
 package meldexun.better_diving.client.event;
 
-import java.text.DecimalFormat;
-
 import meldexun.better_diving.BetterDiving;
-import meldexun.better_diving.client.gui.GuiSeamoth;
 import meldexun.better_diving.config.BetterDivingConfig;
 import meldexun.better_diving.entity.EntitySeamoth;
+import meldexun.better_diving.init.BetterDivingSounds;
 import meldexun.better_diving.network.packet.client.CPacketOpenSeamothInventory;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
+import net.minecraftforge.event.entity.player.AdvancementEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.text.DecimalFormat;
+
 @Mod.EventBusSubscriber(modid = BetterDiving.MOD_ID, value = Dist.CLIENT)
 public class ClientEventHandler {
 
-	private static final DecimalFormat FORMAT = new DecimalFormat("#.##");
+    private static final DecimalFormat FORMAT = new DecimalFormat("#.##");
+    private static float fogBiomeFactor;
+    private static float fogBiomeFactorTarget;
 
-	@SubscribeEvent(priority = EventPriority.LOW)
-	public static void onRenderGameOverlayEventPre(RenderGuiOverlayEvent.Pre event) {
-		Minecraft mc = Minecraft.getInstance();
-		if (event.getOverlay().equals(VanillaGuiOverlay.AIR_LEVEL.type())) {
-			// event.setCanceled(true);
+    // @SubscribeEvent
+    // public static void onItemTooltipEvent(ItemTooltipEvent event) {
+    // 	List<ITextComponent> tooltip = event.getToolTip();
+    // 	ItemStack stack = event.getItemStack();
+    //
+    // 	DivingMaskProviderItem divingMaskProvider = DivingGearManager.getDivingMaskProviderItem(stack);
+    // 	if (divingMaskProvider != null) {
+    // 		tooltip.add(1, new StringTextComponent(TextFormatting.GRAY + String.format("Max Diving Depth %dm", divingMaskProvider.maxDivingDepth)));
+    // 	}
+    //
+    // 	stack.getCapability(CapabilityOxygenItemProvider.OXYGEN).ifPresent(c -> {
+    // 		tooltip.add(1, new StringTextComponent(TextFormatting.GRAY + Integer.toString((int) Math.round(c.getOxygen() / 20.0D / 3.0D) * 3) + "s of Oxygen"));
+    // 	});
+    //
+    // 	MiningspeedProviderItem miningSpeedProvider = DivingGearManager.getMiningspeedProviderItem(stack);
+    // 	if (miningSpeedProvider != null) {
+    // 		tooltip.add(1, new StringTextComponent(TextFormatting.GRAY + (miningSpeedProvider.miningspeed >= 0.0D ? "+" : "") + FORMAT.format(miningSpeedProvider.miningspeed * 100.0D) + "% Mining Speed"));
+    // 	}
+    //
+    // 	SwimspeedProviderItem swimspeedProvider = DivingGearManager.getSwimspeedProviderItem(stack);
+    // 	if (swimspeedProvider != null) {
+    // 		tooltip.add(1, new StringTextComponent(TextFormatting.GRAY + (swimspeedProvider.swimspeed >= 0.0D ? "+" : "") + FORMAT.format(swimspeedProvider.swimspeed * 100.0D) + "% Swim Speed"));
+    // 	}
+    // }
 
-			if (shouldRenderOxygen()) {
-				// GuiOxygen.render(event.getGuiGraphics().pose());
-			}
-		}
-		if (event.getOverlay().equals(VanillaGuiOverlay.CROSSHAIR.type()) && BetterDivingConfig.CLIENT_CONFIG.seamothGuiEnabled.get() && mc.player.getVehicle() instanceof EntitySeamoth) {
-			// GuiSeamoth.render(event.getGuiGraphics().pose());
-		}
-	}
+    // private static final ReflectionMethod<?> KEY_BINDING_UNPRESS_KEY = new ReflectionMethod<>(KeyBinding.class, "?", "unpressKey");
+    private static long fogBiomeLastUpdate;
 
-	private static boolean shouldRenderOxygen() {
-		return false;
-		// if (BetterDivingConfig.CLIENT_CONFIG.oxygenGuiRenderAlways.get()) {
-		// 	return true;
-		// }
-		// Minecraft mc = Minecraft.getInstance();
-		// if (ModList.get().isLoaded("boss_tools")
-		// 		&& BeyondEarth.isSpace(mc.level)) {
-		// 	return false;
-		// }
-		// if (BetterDivingConfig.CLIENT_CONFIG.oxygenGuiRenderUnderwater.get()
-		// 		&& mc.player.isEyeInFluidType(Fluids.WATER.getFluidType())) {
-		// 	return true;
-		// }
-		// return BetterDivingConfig.CLIENT_CONFIG.oxygenGuiRenderNotFull.get()
-		// 		&& OxygenPlayerHelper.getOxygenRespectEquipment(mc.player) < OxygenPlayerHelper.getOxygenCapacityRespectEquipment(mc.player);
-	}
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public static void onRenderGameOverlayEventPre(RenderGuiOverlayEvent.Pre event) {
+        Minecraft mc = Minecraft.getInstance();
+        if (event.getOverlay().equals(VanillaGuiOverlay.AIR_LEVEL.type())) {
+            // event.setCanceled(true);
 
-	// @SubscribeEvent
-	// public static void onItemTooltipEvent(ItemTooltipEvent event) {
-	// 	List<ITextComponent> tooltip = event.getToolTip();
-	// 	ItemStack stack = event.getItemStack();
-	//
-	// 	DivingMaskProviderItem divingMaskProvider = DivingGearManager.getDivingMaskProviderItem(stack);
-	// 	if (divingMaskProvider != null) {
-	// 		tooltip.add(1, new StringTextComponent(TextFormatting.GRAY + String.format("Max Diving Depth %dm", divingMaskProvider.maxDivingDepth)));
-	// 	}
-	//
-	// 	stack.getCapability(CapabilityOxygenItemProvider.OXYGEN).ifPresent(c -> {
-	// 		tooltip.add(1, new StringTextComponent(TextFormatting.GRAY + Integer.toString((int) Math.round(c.getOxygen() / 20.0D / 3.0D) * 3) + "s of Oxygen"));
-	// 	});
-	//
-	// 	MiningspeedProviderItem miningSpeedProvider = DivingGearManager.getMiningspeedProviderItem(stack);
-	// 	if (miningSpeedProvider != null) {
-	// 		tooltip.add(1, new StringTextComponent(TextFormatting.GRAY + (miningSpeedProvider.miningspeed >= 0.0D ? "+" : "") + FORMAT.format(miningSpeedProvider.miningspeed * 100.0D) + "% Mining Speed"));
-	// 	}
-	//
-	// 	SwimspeedProviderItem swimspeedProvider = DivingGearManager.getSwimspeedProviderItem(stack);
-	// 	if (swimspeedProvider != null) {
-	// 		tooltip.add(1, new StringTextComponent(TextFormatting.GRAY + (swimspeedProvider.swimspeed >= 0.0D ? "+" : "") + FORMAT.format(swimspeedProvider.swimspeed * 100.0D) + "% Swim Speed"));
-	// 	}
-	// }
-
-	//private static final ReflectionMethod<?> KEY_BINDING_UNPRESS_KEY = new ReflectionMethod<>(KeyBinding.class, "?", "unpressKey");
-
-	@SubscribeEvent
-	public static void onKeyInputEvent(InputEvent.InteractionKeyMappingTriggered event) {
-		Minecraft mc = Minecraft.getInstance();
-		if (mc.player != null && mc.player.getVehicle() instanceof EntitySeamoth) {
-			if (mc.options.keyInventory.consumeClick()) {
-				BetterDiving.NETWORK.sendToServer(new CPacketOpenSeamothInventory());
-			}
-			/*
-			EntitySeamoth seamoth = (EntitySeamoth) mc.player.getVehicle();
-			for (int i = 0; i < mc.options.keyHotbarSlots.length; i++) {
-				if (event.getKey() == mc.options.keyHotbarSlots[i].getKey().getValue()) {
-					KEY_BINDING_UNPRESS_KEY.invoke(mc.options.keyHotbarSlots[i]);
-					if (i < 4) {
-						ItemStack stack = seamoth.getModule(i);
-						if (!stack.isEmpty()) {
-							if (seamoth.currentModule != i) {
-								seamoth.currentModule = i;
-								mc.player.sendStatusMessage(stack.getDisplayName(), true);
-							} else {
-								seamoth.currentModule = -1;
-							}
-						}
-						break;
-					}
-				}
-			}
-			*/
-		}
-	}
+            if (shouldRenderOxygen()) {
+                // GuiOxygen.render(event.getGuiGraphics().pose());
+            }
+        }
+        if (event.getOverlay()
+                .equals(VanillaGuiOverlay.CROSSHAIR.type()) && BetterDivingConfig.CLIENT_CONFIG.seamothGuiEnabled.get() && mc.player.getVehicle() instanceof EntitySeamoth) {
+            // GuiSeamoth.render(event.getGuiGraphics().pose());
+        }
+    }
 
 	/*
 	@SubscribeEvent
@@ -505,7 +464,66 @@ public class ClientEventHandler {
 	}
 	*/
 
-	private static float fogBiomeFactor;
-	private static float fogBiomeFactorTarget;
-	private static long fogBiomeLastUpdate;
+    private static boolean shouldRenderOxygen() {
+        return false;
+        // if (BetterDivingConfig.CLIENT_CONFIG.oxygenGuiRenderAlways.get()) {
+        // 	return true;
+        // }
+        // Minecraft mc = Minecraft.getInstance();
+        // if (ModList.get().isLoaded("boss_tools")
+        // 		&& BeyondEarth.isSpace(mc.level)) {
+        // 	return false;
+        // }
+        // if (BetterDivingConfig.CLIENT_CONFIG.oxygenGuiRenderUnderwater.get()
+        // 		&& mc.player.isEyeInFluidType(Fluids.WATER.getFluidType())) {
+        // 	return true;
+        // }
+        // return BetterDivingConfig.CLIENT_CONFIG.oxygenGuiRenderNotFull.get()
+        // 		&& OxygenPlayerHelper.getOxygenRespectEquipment(mc.player) < OxygenPlayerHelper.getOxygenCapacityRespectEquipment(mc.player);
+    }
+
+    @SubscribeEvent
+    public static void onKeyInputEvent(InputEvent.InteractionKeyMappingTriggered event) {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player != null && mc.player.getVehicle() instanceof EntitySeamoth) {
+            if (mc.options.keyInventory.consumeClick()) {
+                BetterDiving.NETWORK.sendToServer(
+                        new CPacketOpenSeamothInventory());
+            }
+			/*
+			EntitySeamoth seamoth = (EntitySeamoth) mc.player.getVehicle();
+			for (int i = 0; i < mc.options.keyHotbarSlots.length; i++) {
+				if (event.getKey() == mc.options.keyHotbarSlots[i].getKey().getValue()) {
+					KEY_BINDING_UNPRESS_KEY.invoke(mc.options.keyHotbarSlots[i]);
+					if (i < 4) {
+						ItemStack stack = seamoth.getModule(i);
+						if (!stack.isEmpty()) {
+							if (seamoth.currentModule != i) {
+								seamoth.currentModule = i;
+								mc.player.sendStatusMessage(stack.getDisplayName(), true);
+							} else {
+								seamoth.currentModule = -1;
+							}
+						}
+						break;
+					}
+				}
+			}
+			*/
+        }
+    }
+
+    @SubscribeEvent
+    public static void onAdvancementSeamothEvent(AdvancementEvent.AdvancementEarnEvent event) {
+        if (event.getAdvancement().getId().toString().equals("better_diving" +
+                ":main/seamoth")) {
+            Player player = event.getEntity();
+            BetterDiving.LOGGER.info("Is Client side {}", player.level().isClientSide());
+                Minecraft.getInstance().getSoundManager()
+                        .play(SimpleSoundInstance.forUI(
+                                BetterDivingSounds.ADVANCEMENT_SEAMOTH.get(),
+                                1f, 1f
+                        ));
+        }
+    }
 }
