@@ -21,6 +21,13 @@ public class RavineOutcropFeature extends Feature<OceanOreFeatureConfig> {
         super(codec);
     }
 
+    /**
+     * Pick a random block, check 6 neighboring blocks for an attachable
+     * surface, then check water/air
+     *
+     * @param featurePlaceContext
+     * @return
+     */
     @Override
     public boolean place(FeaturePlaceContext<OceanOreFeatureConfig> featurePlaceContext) {
         OceanOreFeatureConfig config =
@@ -40,31 +47,48 @@ public class RavineOutcropFeature extends Feature<OceanOreFeatureConfig> {
         int j = config.getRandomAmount(rand);
 
         for (int k = 0; k < j; k++) {
-            for (int l = 0; l < 1; l++) {
-                int x = rand.nextInt(8) - rand.nextInt(8);
-                int z = rand.nextInt(8) - rand.nextInt(8);
-                int yMax = reader.getHeight(Heightmap.Types.OCEAN_FLOOR,
-                        pos.getX() + x, pos.getZ() + z) - 1;
-                yMax = Math.min(yMax, config.maxHeight);
-                int yMin = Math.max(reader.getLevel().getMinBuildHeight() + 10,
-                        config.minHeight);
-                int y = yMax > yMin ? yMin + rand.nextInt(yMax - yMin) : yMin;
+            int x = rand.nextInt(8) - rand.nextInt(8);
+            int z = rand.nextInt(8) - rand.nextInt(8);
+            int yMax = reader.getHeight(Heightmap.Types.OCEAN_FLOOR,
+                    pos.getX() + x, pos.getZ() + z) - 1;
+            yMax = Math.min(yMax, config.maxHeight);
+            int yMin = Math.max(reader.getLevel().getMinBuildHeight() + 10,
+                    config.minHeight);
+            int y = yMax > yMin ? yMin + rand.nextInt(yMax - yMin) : yMin;
 
-                BlockPos p = new BlockPos(pos.getX() + x, y, pos.getZ() + z);
-                List<Direction> directions = List.of(Direction.UP,
-                        Direction.SOUTH, Direction.NORTH, Direction.WEST,
-                        Direction.EAST, Direction.DOWN);
-                for (Direction attachDirection : directions) {
-                    Direction facingDirection = attachDirection.getOpposite();
-                    BlockPos attachTo = p.relative(attachDirection);
-                    BlockState state = config.getBlock().defaultBlockState()
-                            .setValue(
-                                    BlockStateProperties.FACING,
-                                    facingDirection);
-                    if (reader.getBlockState(attachTo).isFaceSturdy(reader,
-                            attachTo, facingDirection) && reader.getBlockState(
-                                    p)
-                            .is(Blocks.WATER) && state.canSurvive(reader, p)) {
+            BlockPos p = new BlockPos(pos.getX() + x, y, pos.getZ() + z);
+            List<Direction> directions = List.of(Direction.UP,
+                    Direction.SOUTH, Direction.NORTH, Direction.WEST,
+                    Direction.EAST, Direction.DOWN);
+            for (Direction attachDirection : directions) {
+                Direction facingDirection = attachDirection.getOpposite();
+                BlockPos attachTo = p.relative(attachDirection);
+                BlockState state = config.getBlock().defaultBlockState()
+                        .setValue(
+                                BlockStateProperties.FACING,
+                                facingDirection);
+                if (reader.getBlockState(attachTo).isFaceSturdy(reader,
+                        attachTo, facingDirection) && state.canSurvive(
+                        reader, p)) {
+                    // when spawning in water, always succeed, else if
+                    // air then has 1/3 chance to succeed
+                    BlockState spawnBlockState = reader.getBlockState(p);
+                    boolean shouldSpawn = spawnBlockState
+                            .is(Blocks.WATER);
+                    boolean waterlogged = true;
+                    if (!shouldSpawn) {
+                        if (spawnBlockState.isAir()) {
+                            if (rand.nextInt(3) == 0) {
+                                shouldSpawn = true;
+                                waterlogged = false;
+                            }
+                        }
+                    }
+                    if (shouldSpawn) {
+                        state =
+                                state.setValue(
+                                        BlockStateProperties.WATERLOGGED,
+                                        waterlogged);
                         reader.setBlock(p, state, 2);
                         i++;
                         break;

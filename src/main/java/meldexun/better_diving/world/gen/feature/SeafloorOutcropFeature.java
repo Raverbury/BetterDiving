@@ -39,62 +39,60 @@ public class SeafloorOutcropFeature extends Feature<OceanOreFeatureConfig> {
         int j = config.getRandomAmount(rand);
 
         for (int k = 0; k < j; k++) {
-            for (int l = 0; l < 1; l++) {
-                int x = rand.nextInt(8) - rand.nextInt(8);
-                int z = rand.nextInt(8) - rand.nextInt(8);
-                int yCenter = reader.getHeight(Heightmap.Types.OCEAN_FLOOR,
-                        pos.getX() + x, pos.getZ() + z);
-                if (yCenter > config.maxHeight) {
-                    continue;
-                }
-                int yNorth = reader.getHeight(Heightmap.Types.OCEAN_FLOOR,
-                        pos.getX() + x, pos.getZ() + z - 1);
-                int ySouth = reader.getHeight(Heightmap.Types.OCEAN_FLOOR,
-                        pos.getX() + x, pos.getZ() + z + 1);
-                int yEast = reader.getHeight(Heightmap.Types.OCEAN_FLOOR,
-                        pos.getX() + x + 1, pos.getZ() + z);
-                int yWest = reader.getHeight(Heightmap.Types.OCEAN_FLOOR,
-                        pos.getX() + x - 1, pos.getZ() + z);
-                int yMax = Math.max(Math.max(yNorth, ySouth),
-                        Math.max(yEast, yWest));
-                if (yMax < config.minHeight) {
-                    continue;
-                }
-                int yMin = Math.max(yCenter,
-                        config.minHeight);
-                yMax = Math.min(yMax, config.maxHeight);
-                int y = yMax > yMin ? yMin + rand.nextInt(yMax - yMin) : yMin;
+            int x = rand.nextInt(8) - rand.nextInt(8);
+            int z = rand.nextInt(8) - rand.nextInt(8);
+            int yCenter = reader.getHeight(Heightmap.Types.OCEAN_FLOOR,
+                    pos.getX() + x, pos.getZ() + z);
+            if (yCenter > config.maxHeight) {
+                continue;
+            }
+            int yNorth = reader.getHeight(Heightmap.Types.OCEAN_FLOOR,
+                    pos.getX() + x, pos.getZ() + z - 1);
+            int ySouth = reader.getHeight(Heightmap.Types.OCEAN_FLOOR,
+                    pos.getX() + x, pos.getZ() + z + 1);
+            int yEast = reader.getHeight(Heightmap.Types.OCEAN_FLOOR,
+                    pos.getX() + x + 1, pos.getZ() + z);
+            int yWest = reader.getHeight(Heightmap.Types.OCEAN_FLOOR,
+                    pos.getX() + x - 1, pos.getZ() + z);
+            int yMax = Math.max(Math.max(yNorth, ySouth),
+                    Math.max(yEast, yWest));
+            if (yMax < config.minHeight) {
+                continue;
+            }
+            int yMin = Math.max(yCenter,
+                    config.minHeight);
+            yMax = Math.min(yMax, config.maxHeight);
+            int y = yMax > yMin ? yMin + rand.nextInt(yMax - yMin) : yMin;
 
-                BlockPos p = new BlockPos(pos.getX() + x, y, pos.getZ() + z);
-                List<Direction> list = new ArrayList<>();
-                if (y == yCenter) {
-                    list.add(Direction.UP);
-                }
-                if (y < yNorth) {
-                    list.add(Direction.SOUTH);
-                }
-                if (y < ySouth) {
-                    list.add(Direction.NORTH);
-                }
-                if (y < yEast) {
-                    list.add(Direction.WEST);
-                }
-                if (y < yWest) {
-                    list.add(Direction.EAST);
-                }
-                Direction dir = list.get(rand.nextInt(list.size()));
-                Direction oppositeDir = dir.getOpposite();
-                BlockPos attachTo = p.relative(oppositeDir);
-                BlockState state = config.getBlock().defaultBlockState()
-                        .setValue(
-                                BlockStateProperties.FACING, dir);
-                if (reader.getBlockState(attachTo).isFaceSturdy(reader,
-                        attachTo, oppositeDir) && reader.getBlockState(p)
-                        .is(Blocks.WATER) && state.canSurvive(reader, p)) {
-                    reader.setBlock(p, state, 2);
-                    i++;
-                    break;
-                }
+            BlockPos p = new BlockPos(pos.getX() + x, y, pos.getZ() + z);
+            List<Direction> list = new ArrayList<>();
+            if (y == yCenter) {
+                list.add(Direction.UP);
+            }
+            if (y < yNorth) {
+                list.add(Direction.SOUTH);
+            }
+            if (y < ySouth) {
+                list.add(Direction.NORTH);
+            }
+            if (y < yEast) {
+                list.add(Direction.WEST);
+            }
+            if (y < yWest) {
+                list.add(Direction.EAST);
+            }
+            Direction dir = list.get(rand.nextInt(list.size()));
+            Direction oppositeDir = dir.getOpposite();
+            BlockPos attachTo = p.relative(oppositeDir);
+            BlockState state = config.getBlock().defaultBlockState()
+                    .setValue(
+                            BlockStateProperties.FACING, dir);
+            if (reader.getBlockState(attachTo).isFaceSturdy(reader,
+                    attachTo, oppositeDir) && reader.getBlockState(p)
+                    .is(Blocks.WATER) && state.canSurvive(reader, p)) {
+                reader.setBlock(p, state, 2);
+                i++;
+                break;
             }
         }
         return i > 0;
