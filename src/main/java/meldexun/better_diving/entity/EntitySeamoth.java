@@ -281,8 +281,8 @@ public class EntitySeamoth extends Entity implements IEntityAdditionalSpawnData 
             // play seamoth welcome/no power sound
             long currentTimestamp = this.level().getGameTime();
             boolean hasEnergy = this.hasEnergy();
-            // 75 seconds
-            long soundInterval = 1500;
+            // 120 seconds
+            long soundInterval = 2400;
             // shorter interval if hasEnergy is different
             if (hasEnergy != prevWelcomeHasEnergy) {
                 // 1 seconds

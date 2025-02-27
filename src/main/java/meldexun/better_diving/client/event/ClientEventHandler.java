@@ -1,18 +1,15 @@
 package meldexun.better_diving.client.event;
 
 import meldexun.better_diving.BetterDiving;
+import meldexun.better_diving.client.gui.GuiSeamoth;
 import meldexun.better_diving.config.BetterDivingConfig;
 import meldexun.better_diving.entity.EntitySeamoth;
-import meldexun.better_diving.init.BetterDivingSounds;
 import meldexun.better_diving.network.packet.client.CPacketOpenSeamothInventory;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
-import net.minecraftforge.event.entity.player.AdvancementEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -66,7 +63,7 @@ public class ClientEventHandler {
         }
         if (event.getOverlay()
                 .equals(VanillaGuiOverlay.CROSSHAIR.type()) && BetterDivingConfig.CLIENT_CONFIG.seamothGuiEnabled.get() && mc.player.getVehicle() instanceof EntitySeamoth) {
-            // GuiSeamoth.render(event.getGuiGraphics().pose());
+            GuiSeamoth.render(event.getGuiGraphics().pose());
         }
     }
 
@@ -510,20 +507,6 @@ public class ClientEventHandler {
 				}
 			}
 			*/
-        }
-    }
-
-    @SubscribeEvent
-    public static void onAdvancementSeamothEvent(AdvancementEvent.AdvancementEarnEvent event) {
-        if (event.getAdvancement().getId().toString().equals("better_diving" +
-                ":main/seamoth")) {
-            Player player = event.getEntity();
-            BetterDiving.LOGGER.info("Is Client side {}", player.level().isClientSide());
-                Minecraft.getInstance().getSoundManager()
-                        .play(SimpleSoundInstance.forUI(
-                                BetterDivingSounds.ADVANCEMENT_SEAMOTH.get(),
-                                1f, 1f
-                        ));
         }
     }
 }

@@ -37,9 +37,10 @@ public class GuiSeamoth {
                 BetterDivingConfig.CLIENT_CONFIG.seamothGuiAnchor.get(),
                 BetterDivingConfig.CLIENT_CONFIG.seamothGuiOffsetY.get());
 
-        textureManager.bindForSetup(new ResourceLocation(BetterDiving.MOD_ID,
-                "textures/gui/seamoth_background.png"));
-        BetterDivingGuiHelper.drawTexture(offsetX, offsetY, 0.0D, 0.0D, width,
+        // textureManager.bindForSetup();
+        BetterDivingGuiHelper.drawTexture(new ResourceLocation(BetterDiving.MOD_ID,
+                        "textures/gui/seamoth_background.png"), offsetX,
+                offsetY, 0.0D, 0.0D, width,
                 height, width / 128.0D, height / 64.0D);
 
         int energy =
@@ -70,6 +71,7 @@ public class GuiSeamoth {
 
         // GlStateManager._alphaFunc(GL11.GL_GREATER, 0.1F);
         if (!blend) {
+            // RenderSystem.disableBlend();
             GL11.glDisable(GL11.GL_BLEND);
         }
     }

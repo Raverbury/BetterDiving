@@ -7,17 +7,17 @@
         {
           "type": "minecraft:item",
           "name": "better_diving:titanium_chunk",
-          "weight": 35
+          "weight": 45
         },
         {
           "type": "minecraft:item",
           "name": "better_diving:copper_chunk",
-          "weight": 35
+          "weight": 20
         },
         {
           "type": "minecraft:item",
           "name": "better_diving:iron_chunk",
-          "weight": 20
+          "weight": 25
         },
         {
           "type": "minecraft:item",

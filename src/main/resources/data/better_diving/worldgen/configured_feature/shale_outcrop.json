@@ -7,6 +7,6 @@
     "min_amount": 5,
     "max_amount": 11,
     "min_height": -50,
-    "max_height": 45
+    "max_height": 60
   }
 }
