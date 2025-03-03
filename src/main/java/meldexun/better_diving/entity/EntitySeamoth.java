@@ -8,21 +8,12 @@ import meldexun.better_diving.config.BetterDivingConfig;
 import meldexun.better_diving.init.BetterDivingItems;
 import meldexun.better_diving.init.BetterDivingSounds;
 import meldexun.better_diving.inventory.container.ContainerSeamothEntity;
-import meldexun.better_diving.item.ItemEnergyStorage;
-import meldexun.better_diving.item.ItemPowerCell;
 import meldexun.better_diving.network.packet.client.CPacketSyncSeamothInput;
-import meldexun.better_diving.network.packet.server.SPacketSyncSeamothEnergy;
-import meldexun.better_diving.network.packet.server.SPacketSyncSeamothPowerCell;
 import meldexun.better_diving.util.BetterDivingHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.sounds.SoundManager;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.InteractionHand;
@@ -37,17 +28,11 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.network.NetworkHooks;
-import net.minecraftforge.network.PacketDistributor;
 
 import java.util.List;
 
-public class EntitySeamoth extends Entity implements IEntityAdditionalSpawnData {
+public class EntitySeamoth extends EntityPowerCellPoweredVehicle {
 
     public boolean inputForward = false;
     public boolean inputRight = false;
@@ -70,36 +55,6 @@ public class EntitySeamoth extends Entity implements IEntityAdditionalSpawnData 
 
     public EntitySeamoth(EntityType<?> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
-    }
-
-    @Override
-    protected void defineSynchedData() {
-
-    }
-
-    @Override
-    protected void readAdditionalSaveData(CompoundTag p_70037_1_) {
-
-    }
-
-    @Override
-    protected void addAdditionalSaveData(CompoundTag p_213281_1_) {
-
-    }
-
-    @Override
-    public void writeSpawnData(FriendlyByteBuf buffer) {
-        buffer.writeItemStack(this.getPowerCell(), false);
-    }
-
-    @Override
-    public void readSpawnData(FriendlyByteBuf additionalData) {
-        this.setPowerCell(additionalData.readItem());
-    }
-
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override
@@ -271,6 +226,7 @@ public class EntitySeamoth extends Entity implements IEntityAdditionalSpawnData 
             player.updatePlayerPose();
         }
         passenger.refreshDimensions();
+        this.shouldUndock = true;
         if (!this.level().isClientSide()) {
             this.syncPowerCell();
         } else if (passenger instanceof Player) {
@@ -335,6 +291,11 @@ public class EntitySeamoth extends Entity implements IEntityAdditionalSpawnData 
     @Override
     @OnlyIn(Dist.CLIENT)
     public void onPassengerTurned(Entity entityToUpdate) {
+        if (this.entityData.get(IS_DOCKED)) {
+            entityToUpdate.setYRot(this.yRotO);
+            entityToUpdate.setXRot(this.xRotO);
+            return;
+        }
         this.yRotO = entityToUpdate.yRotO;
         this.setYRot(entityToUpdate.getYRot());
         this.xRotO = entityToUpdate.xRotO;
@@ -359,6 +320,11 @@ public class EntitySeamoth extends Entity implements IEntityAdditionalSpawnData 
         if (Math.abs(this.getDeltaMovement().z) < 0.001D) {
             this.setDeltaMovement(new Vec3(this.getDeltaMovement().x,
                     this.getDeltaMovement().y, 0.0D));
+        }
+
+        if (this.entityData.get(IS_DOCKED)) {
+            this.setDeltaMovement(Vec3.ZERO);
+            return;
         }
 
         if (!this.insideWater) {
@@ -470,95 +436,4 @@ public class EntitySeamoth extends Entity implements IEntityAdditionalSpawnData 
         });
         return stack;
     }
-
-    public ItemStack getPowerCell() {
-        LazyOptional<IItemHandler> optionalItemHandler =
-                this.getCapability(ForgeCapabilities.ITEM_HANDLER);
-        if (!optionalItemHandler.isPresent()) {
-            return ItemStack.EMPTY;
-        }
-        IItemHandler itemHandler = optionalItemHandler.orElseThrow(
-                NullPointerException::new);
-        return itemHandler.getStackInSlot(0);
-    }
-
-    public void setPowerCell(ItemStack stack) {
-        this.getCapability(
-                ForgeCapabilities.ITEM_HANDLER).ifPresent(c -> {
-            ((ItemStackHandler) c).setStackInSlot(0, stack);
-        });
-    }
-
-    public boolean hasEnergy() {
-        ItemStack powerCell = this.getPowerCell();
-        if (powerCell.getItem() instanceof ItemPowerCell) {
-            return ItemEnergyStorage.hasEnergy(powerCell);
-        }
-        return false;
-    }
-
-    public int getEnergy() {
-        ItemStack powerCell = this.getPowerCell();
-        if (powerCell.getItem() instanceof ItemPowerCell) {
-            return ItemEnergyStorage.getEnergy(powerCell);
-        }
-        return 0;
-    }
-
-    public boolean setEnergy(int energy) {
-        ItemStack powerCell = this.getPowerCell();
-        if (powerCell.getItem() instanceof ItemPowerCell) {
-            return ItemEnergyStorage.setEnergy(powerCell, energy);
-        }
-        return false;
-    }
-
-    public int getEnergyCapacity() {
-        ItemStack powerCell = this.getPowerCell();
-        if (powerCell.getItem() instanceof ItemPowerCell) {
-            return ItemEnergyStorage.getEnergyCapacity(powerCell);
-        }
-        return 0;
-    }
-
-    public int receiveEnergy(int amount) {
-        if (amount > 0) {
-            ItemStack powerCell = this.getPowerCell();
-            if (powerCell.getItem() instanceof ItemPowerCell) {
-                return ItemEnergyStorage.receiveEnergy(powerCell, amount);
-            }
-        }
-        return 0;
-    }
-
-    public int extractEnergy(int amount) {
-        if (amount > 0) {
-            ItemStack powerCell = this.getPowerCell();
-            if (powerCell.getItem() instanceof ItemPowerCell) {
-                return ItemEnergyStorage.extractEnergy(powerCell, amount);
-            }
-        }
-        return 0;
-    }
-
-    public void syncPowerCell() {
-        if (!this.level()
-                .isClientSide() && this.getControllingPassenger() instanceof Player) {
-            Player player = (Player) this.getControllingPassenger();
-            BetterDiving.NETWORK.send(
-                    PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
-                    new SPacketSyncSeamothPowerCell(this));
-        }
-    }
-
-    public void syncEnergy() {
-        if (!this.level()
-                .isClientSide() && this.getControllingPassenger() instanceof Player) {
-            Player player = (Player) this.getControllingPassenger();
-            BetterDiving.NETWORK.send(
-                    PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
-                    new SPacketSyncSeamothEnergy(this));
-        }
-    }
-
 }

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "#l#",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "better_diving:titanium_ingot"
+    },
+    "l": {
+      "item": "better_diving:lead_ingot"
+    }
+  },
+  "result": {
+    "item": "better_diving:vehicle_dock"
+  }
+}

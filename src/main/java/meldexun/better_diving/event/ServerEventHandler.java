@@ -1,7 +1,7 @@
 package meldexun.better_diving.event;
 
 import meldexun.better_diving.BetterDiving;
-import meldexun.better_diving.entity.EntitySeamoth;
+import meldexun.better_diving.entity.EntityPowerCellPoweredVehicle;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.event.entity.living.LivingBreatheEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
@@ -19,8 +19,8 @@ public class ServerEventHandler {
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void onLivingBreatheEvent(LivingBreatheEvent event) {
         Entity vehicle = event.getEntity().getVehicle();
-        if (event.getEntity().getVehicle() instanceof EntitySeamoth) {
-            if (((EntitySeamoth) vehicle).hasEnergy()) {
+        if (event.getEntity().getVehicle() instanceof EntityPowerCellPoweredVehicle) {
+            if (((EntityPowerCellPoweredVehicle) vehicle).hasEnergy()) {
                 event.setCanBreathe(true);
                 event.setCanRefillAir(true);
             }

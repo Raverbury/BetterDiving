@@ -2,6 +2,7 @@ package meldexun.better_diving.init;
 
 import meldexun.better_diving.BetterDiving;
 import meldexun.better_diving.block.BlockUnderwaterOre;
+import meldexun.better_diving.block.BlockVehicleDock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -36,6 +37,9 @@ public class BetterDivingBlocks {
     public static final RegistryObject<Block> LITHIUM_BLOCK = BLOCKS.register(
             "lithium_block", () -> new Block(
                     BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)));
+    public static final RegistryObject<Block> DOCKING_BLOCK = BLOCKS.register(
+            "vehicle_dock",
+            () -> new BlockVehicleDock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)));
 
     public static void registerBlocks() {
         BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());

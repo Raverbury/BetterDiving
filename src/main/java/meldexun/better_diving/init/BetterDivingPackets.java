@@ -7,8 +7,8 @@ import meldexun.better_diving.network.packet.IPacket;
 import meldexun.better_diving.network.packet.client.CPacketOpenSeamothInventory;
 import meldexun.better_diving.network.packet.client.CPacketSyncSeamothInput;
 import meldexun.better_diving.network.packet.server.SPacketSyncOxygen;
-import meldexun.better_diving.network.packet.server.SPacketSyncSeamothEnergy;
-import meldexun.better_diving.network.packet.server.SPacketSyncSeamothPowerCell;
+import meldexun.better_diving.network.packet.server.SPacketSyncPowerCellVehicleEnergy;
+import meldexun.better_diving.network.packet.server.SPacketSyncVehiclePowerCell;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.simple.SimpleChannel;
 
@@ -20,8 +20,8 @@ public class BetterDivingPackets {
 		registerPacket(SPacketSyncOxygen.class, NetworkDirection.PLAY_TO_CLIENT,
 				SPacketSyncOxygen::new);
 		registerPacket(CPacketSyncSeamothInput.class, NetworkDirection.PLAY_TO_SERVER, CPacketSyncSeamothInput::new);
-		registerPacket(SPacketSyncSeamothPowerCell.class, NetworkDirection.PLAY_TO_CLIENT, SPacketSyncSeamothPowerCell::new);
-		registerPacket(SPacketSyncSeamothEnergy.class, NetworkDirection.PLAY_TO_CLIENT, SPacketSyncSeamothEnergy::new);
+		registerPacket(SPacketSyncVehiclePowerCell.class, NetworkDirection.PLAY_TO_CLIENT, SPacketSyncVehiclePowerCell::new);
+		registerPacket(SPacketSyncPowerCellVehicleEnergy.class, NetworkDirection.PLAY_TO_CLIENT, SPacketSyncPowerCellVehicleEnergy::new);
 		registerPacket(CPacketOpenSeamothInventory.class, NetworkDirection.PLAY_TO_SERVER, CPacketOpenSeamothInventory::new);
 	}
 

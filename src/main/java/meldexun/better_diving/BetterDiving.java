@@ -37,6 +37,7 @@ public class BetterDiving {
 		BetterDivingBlocks.registerBlocks();
 		BetterDivingItems.registerItems();
 		BetterDivingEntities.registerEntities();
+		BetterDivingBlockEntities.registerBlockEntities();
 		BetterDivingContainers.registerContainers();
 		BetterDivingSounds.registerSounds();
 		BetterDivingFeatures.registerFeatures();

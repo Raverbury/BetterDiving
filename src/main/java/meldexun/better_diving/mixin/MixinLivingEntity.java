@@ -1,7 +1,7 @@
 package meldexun.better_diving.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import meldexun.better_diving.entity.EntitySeamoth;
+import meldexun.better_diving.entity.EntityPowerCellPoweredVehicle;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -25,8 +25,8 @@ public abstract class MixinLivingEntity implements AccessorEntity {
             return true;
         }
         Entity vehicle = this.betterdiving$invokeGetVehicle();
-        if (vehicle instanceof EntitySeamoth) {
-            return ((EntitySeamoth)vehicle).hasEnergy();
+        if (vehicle instanceof EntityPowerCellPoweredVehicle) {
+            return ((EntityPowerCellPoweredVehicle)vehicle).hasEnergy();
         }
         return false;
     }

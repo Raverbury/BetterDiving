@@ -51,6 +51,7 @@
   "block.better_diving.silver_block": "Silver Block",
   "block.better_diving.lead_block": "Lead Block",
   "block.better_diving.lithium_block": "Lithium Block",
+  "block.better_diving.vehicle_dock": "Vehicle Dock",
 
   "entity.better_diving.seamoth": "Seamoth",
   "advancement.better_diving.root": "Better Get To Diving",

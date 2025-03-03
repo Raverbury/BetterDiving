@@ -16,7 +16,8 @@ public class BetterDivingEntities {
 
 	public static final RegistryObject<EntityType<EntitySeamoth>> SEAMOTH =
 			ENTITIES.register("seamoth",
-					() -> EntityType.Builder.of(EntitySeamoth::new, MobCategory.MISC).fireImmune().setTrackingRange(64).setUpdateInterval(1).sized(1.82F, 1.82F).setShouldReceiveVelocityUpdates(true).build("seamoth"));
+					() -> EntityType.Builder.of(EntitySeamoth::new,
+							MobCategory.MISC).fireImmune().setTrackingRange(64).setUpdateInterval(1).sized(1.8125F, 1.8125F).setShouldReceiveVelocityUpdates(true).build("seamoth"));
 
 	public static void registerEntities() {
 		ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());

@@ -50,9 +50,6 @@ public class BetterDivingCreativeTab {
                                 seamothStack.getCapability(
                                                 ForgeCapabilities.ITEM_HANDLER)
                                         .ifPresent(c -> {
-                                            BetterDiving.LOGGER.info(
-                                                    "Creativetab seamoth has " +
-                                                            "cap");
                                             c.insertItem(
                                                     0, new ItemStack(
                                                             BetterDivingItems.POWER_CELL.get()), false);
