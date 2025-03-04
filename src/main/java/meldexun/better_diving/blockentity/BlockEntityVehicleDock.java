@@ -1,13 +1,16 @@
 package meldexun.better_diving.blockentity;
 
+import meldexun.better_diving.BetterDiving;
 import meldexun.better_diving.api.entity.EntityBetterDivingVehicle;
 import meldexun.better_diving.init.BetterDivingBlockEntities;
+import meldexun.better_diving.network.packet.server.SPacketSyncDockingVehicle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
@@ -16,6 +19,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -64,36 +68,34 @@ public class BlockEntityVehicleDock extends BlockEntity {
                 if (vehicle != null) {
                     blockEntity.dockingVehicle = vehicle;
                     blockEntity.dockingStage = 1;
-                    if (!level.isClientSide()) {
-                        blockEntity.setChanged();
-                    }
+                    blockEntity.setChanged();
                 }
                 break;
             case 1:
                 if (blockEntity.verifyDockingVehicle()) {
-                    Vec3 dockPos = new Vec3(pos.getX() + 0.5,
-                            pos.getY() - 3.5 - blockEntity.dockingVehicle.getBoundingBox()
-                                    .getYsize(),
-                            pos.getZ() + 0.5);
+                    double dockX = pos.getX() + 0.5;
+                    double dockY = pos.getY() - 3.5 - blockEntity.dockingVehicle.getBoundingBox()
+                            .getYsize();
+                    double dockZ = pos.getZ() + 0.5;
                     blockEntity.dockingVehicle.startDocking();
                     blockEntity.dockingVehicle.setDeltaMovement(Vec3.ZERO);
                     blockEntity.dockProgress += 1;
 
-                    float yaw = blockEntity.dockingVehicle.getYRot();
+                    float newYaw = Mth.lerpInt(blockEntity.dockProgress / 30f,
+                            (int) blockEntity.dockingVehicle.getYRot(),
+                            getYawTarget(blockEntity.dockingVehicle));
                     blockEntity.dockingVehicle.setYRot(
-                            Mth.lerpInt(blockEntity.dockProgress / 30f,
-                                    (int) yaw,
-                                    getYawTarget(blockEntity.dockingVehicle)));
+                            newYaw);
 
-                    float pitch = blockEntity.dockingVehicle.getXRot();
-                    blockEntity.dockingVehicle.setXRot(
+                    float newPitch =
                             Mth.lerpInt(blockEntity.dockProgress / 25f,
-                                    (int) pitch,
-                                    0));
+                                    (int) blockEntity.dockingVehicle.getXRot(),
+                                    0);
+                    blockEntity.dockingVehicle.setXRot(newPitch);
 
                     Vec3 vehiclePos = blockEntity.dockingVehicle.position();
                     double newX = Mth.lerp(blockEntity.dockProgress / 45.0,
-                            vehiclePos.x, dockPos.x);
+                            vehiclePos.x, dockX);
                     double yLerpScale = 0.05;
                     if (blockEntity.dockProgress > 25) {
                         yLerpScale = 0.4;
@@ -101,15 +103,17 @@ public class BlockEntityVehicleDock extends BlockEntity {
                     double newY =
                             Mth.lerp(
                                     yLerpScale * blockEntity.dockProgress / 45.0f,
-                                    vehiclePos.y, dockPos.y);
+                                    vehiclePos.y, dockY);
                     double newZ = Mth.lerp(blockEntity.dockProgress / 45.0,
-                            vehiclePos.z, dockPos.z);
-                    Vec3 newVehiclePos = new Vec3(newX, newY, newZ);
-                    blockEntity.dockingVehicle.setPos(newVehiclePos);
+                            vehiclePos.z, dockZ);
+                    blockEntity.dockingVehicle.moveTo(newX, newY, newZ);
                     blockEntity.dockingVehicle.hasImpulse = true;
 
                     if (blockEntity.dockProgress >= 50) {
-                        blockEntity.dockingVehicle.setPos(dockPos);
+                        newX = dockX;
+                        newY = dockY;
+                        newZ = dockZ;
+                        blockEntity.dockingVehicle.moveTo(newX, newY, newZ);
                         if (blockEntity.dockProgress >= 60) {
                             blockEntity.dockingVehicle.shouldUndock
                                     = false;
@@ -120,22 +124,28 @@ public class BlockEntityVehicleDock extends BlockEntity {
                             }
                         }
                     }
+                    syncVehicle(blockEntity.dockingVehicle, (float) newX,
+                            (float) newY, (float) newZ,
+                            newYaw, newPitch);
                 } else {
                     blockEntity.releaseVehicle();
                 }
-                if (!level.isClientSide()) {
-                    blockEntity.setChanged();
-                }
+                blockEntity.setChanged();
                 break;
             case 2:
                 if (blockEntity.verifyDockingVehicle()) {
-                    Vec3 dockPos = new Vec3(pos.getX() + 0.5,
+                    double dockX = pos.getX() + 0.5;
+                    double dockY =
                             pos.getY() - 3.5 - blockEntity.dockingVehicle.getBoundingBox()
-                                    .getYsize(),
-                            pos.getZ() + 0.5);
-                    blockEntity.dockingVehicle.setPos(dockPos);
+                            .getYsize();
+                    double dockZ = pos.getZ() + 0.5;
+                    blockEntity.dockingVehicle.moveTo(dockX, dockY, dockZ);
                     blockEntity.dockingVehicle.setDeltaMovement(Vec3.ZERO);
                     blockEntity.dockingVehicle.hasImpulse = true;
+                    // syncVehicle(blockEntity.dockingVehicle, (float) dockX,
+                    //         (float) dockZ, (float) dockY,
+                    //         blockEntity.dockingVehicle.getYRot(),
+                    //         blockEntity.dockingVehicle.getXRot());
                     int missingEnergy =
                             blockEntity.dockingVehicle.getEnergyCapacity() - blockEntity.dockingVehicle.getEnergy();
                     blockEntity.dockingVehicle.receiveEnergy(
@@ -147,15 +157,11 @@ public class BlockEntityVehicleDock extends BlockEntity {
                             blockEntity.dockingVehicle = null;
                             blockEntity.dockingStage = 3;
                         }
-                        if (!level.isClientSide()) {
-                            blockEntity.setChanged();
-                        }
+                        blockEntity.setChanged();
                     }
                 } else {
                     blockEntity.releaseVehicle();
-                    if (!level.isClientSide()) {
-                        blockEntity.setChanged();
-                    }
+                    blockEntity.setChanged();
                 }
                 break;
             case 3:
@@ -165,23 +171,19 @@ public class BlockEntityVehicleDock extends BlockEntity {
                     blockEntity.dockingVehicle = null;
                     blockEntity.dockProgress = 0;
                     blockEntity.dockingStage = 0;
-                    if (!level.isClientSide()) {
-                        blockEntity.setChanged();
-                    }
+                    blockEntity.setChanged();
                 }
                 break;
             default:
                 blockEntity.dockingStage = 0;
-                if (!level.isClientSide()) {
-                    blockEntity.setChanged();
-                }
+                blockEntity.setChanged();
         }
 
         level.updateNeighbourForOutputSignal(pos, state.getBlock());
     }
 
     private static List<EntityBetterDivingVehicle> getNearbyVehicle(Level level,
-                                                                        BlockPos blockPos) {
+                                                                    BlockPos blockPos) {
         return level.getEntitiesOfClass(
                 EntityBetterDivingVehicle.class,
                 new AABB(blockPos.getX(), blockPos.getY() - 6,
@@ -241,6 +243,19 @@ public class BlockEntityVehicleDock extends BlockEntity {
             blockEntityVehicleDock.dockingStage = 0;
         } else {
             blockEntityVehicleDock.dockingStage = nbt.getInt("DockStage");
+        }
+    }
+
+    private static void syncVehicle(EntityBetterDivingVehicle vehicle,
+                                    float x, float y, float z,
+                                    float yaw, float pitch) {
+        if (vehicle.getControllingPassenger() instanceof ServerPlayer) {
+            BetterDiving.NETWORK.send(
+                    PacketDistributor.PLAYER.with(
+                            () -> (ServerPlayer) vehicle.getControllingPassenger()),
+                    new SPacketSyncDockingVehicle(vehicle, x,
+                            y, z,
+                            yaw, pitch));
         }
     }
 

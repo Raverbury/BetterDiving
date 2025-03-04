@@ -42,7 +42,7 @@ public class BlockUnderwaterOre extends Block implements SimpleWaterloggedBlock 
     }
 
     public BlockUnderwaterOre() {
-        super(Block.Properties.copy(Blocks.SAND).sound(BetterDivingSounds.OUTCROP_SOUNDS));
+        super(Block.Properties.copy(Blocks.SAND).sound(BetterDivingSounds.OUTCROP_SOUNDS).strength(0.25f));
         this.registerDefaultState(this.stateDefinition.any().setValue(
                         BlockStateProperties.FACING,
                         Direction.UP).setValue(ROTATION, 0)
