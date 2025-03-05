@@ -82,13 +82,10 @@ public class SeafloorOutcropFeature extends Feature<OceanOreFeatureConfig> {
                 list.add(Direction.EAST);
             }
             Direction dir = list.get(rand.nextInt(list.size()));
-            Direction oppositeDir = dir.getOpposite();
-            BlockPos attachTo = p.relative(oppositeDir);
             BlockState state = config.getBlock().defaultBlockState()
                     .setValue(
                             BlockStateProperties.FACING, dir);
-            if (reader.getBlockState(attachTo).isFaceSturdy(reader,
-                    attachTo, oppositeDir) && reader.getBlockState(p)
+            if (reader.getBlockState(p)
                     .is(Blocks.WATER) && state.canSurvive(reader, p)) {
                 reader.setBlock(p, state, 2);
                 i++;

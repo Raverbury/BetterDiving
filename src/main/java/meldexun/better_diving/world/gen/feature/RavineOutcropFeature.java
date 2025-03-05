@@ -8,7 +8,6 @@ import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
@@ -40,7 +39,6 @@ public class RavineOutcropFeature extends Feature<OceanOreFeatureConfig> {
                 .nextInt(config.chance) != 0) {
             return false;
         }
-        ChunkGenerator generator = featurePlaceContext.chunkGenerator();
         BlockPos pos = featurePlaceContext.origin();
         WorldGenLevel reader = featurePlaceContext.level();
         int i = 0;
@@ -62,13 +60,11 @@ public class RavineOutcropFeature extends Feature<OceanOreFeatureConfig> {
                     Direction.EAST, Direction.DOWN);
             for (Direction attachDirection : directions) {
                 Direction facingDirection = attachDirection.getOpposite();
-                BlockPos attachTo = p.relative(attachDirection);
                 BlockState state = config.getBlock().defaultBlockState()
                         .setValue(
                                 BlockStateProperties.FACING,
                                 facingDirection);
-                if (reader.getBlockState(attachTo).isFaceSturdy(reader,
-                        attachTo, facingDirection) && state.canSurvive(
+                if (state.canSurvive(
                         reader, p)) {
                     // when spawning in water, always succeed, else if
                     // air then has 1/3 chance to succeed
