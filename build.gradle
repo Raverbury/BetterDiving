@@ -121,12 +121,12 @@ repositories {
     // flatDir {
     //     dir 'libs'
     // }
-//    maven {
-//        url "https://www.cursemaven.com"
-////        content {
-////            includeGroup "curse.maven"
-////        }
-//    }
+    maven {
+        url "https://www.cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
 }
 
 dependencies {
@@ -162,11 +162,19 @@ dependencies {
     }
 
     // JEI
-//    runtimeOnly fg.deobf("curse.maven:jei-238222:6075247")
-//    // Mekanism
-//    runtimeOnly fg.deobf("curse.maven:mekanism-268560:6123077")
-//    // Mekanism generator
-//    runtimeOnly fg.deobf("curse.maven:mekanism-generators-268566:6123081")
+    runtimeOnly fg.deobf("curse.maven:jei-238222:6075247")
+    // Mekanism
+    runtimeOnly fg.deobf("curse.maven:mekanism-268560:6123077")
+    // Mekanism generator
+    runtimeOnly fg.deobf("curse.maven:mekanism-generators-268566:6123081")
+    // Jade
+    runtimeOnly fg.deobf("curse.maven:jade-324717:6106101")
+    // observable
+    runtimeOnly fg.deobf("curse.maven:observable-509575:5643037")
+    // architectury
+    runtimeOnly fg.deobf("curse.maven:architectury-api-419699:5137938")
+    // kotlin for forge
+    runtimeOnly fg.deobf("curse.maven:kotlin-for-forge-351264:5402061")
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

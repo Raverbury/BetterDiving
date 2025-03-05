@@ -52,6 +52,8 @@ public class BetterDivingConfig {
 		public final Seamoth seamoth;
 		public final UnderwaterVisuals underwaterVisuals;
 
+		public final DockingBlock dockingBlock;
+
 		public ServerConfig(ForgeConfigSpec.Builder builder) {
 			this.breakSpeedChanges = builder.comment("comment").define("breakSpeedChanges", true);
 			this.movementChanges = builder.comment("comment").define("movementChanges", true);
@@ -78,6 +80,7 @@ public class BetterDivingConfig {
 			this.oxygen = new Oxygen(builder);
 			this.seamoth = new Seamoth(builder);
 			this.underwaterVisuals = new UnderwaterVisuals(builder);
+			this.dockingBlock = new DockingBlock(builder);
 		}
 
 		public static class Mining {
@@ -236,12 +239,18 @@ public class BetterDivingConfig {
 
 			public final ForgeConfigSpec.DoubleValue seamothSpeed;
 			public final ForgeConfigSpec.IntValue seamothEnergyUsage;
+			public final ForgeConfigSpec.BooleanValue seamothAscendDescendVertically;
 
 			public Seamoth(ForgeConfigSpec.Builder builder) {
 				builder.comment("comment").push("seamoth");
 
 				this.seamothSpeed = builder.comment("Speed of the seamoth. (blocks per second = x * 400)").defineInRange("seamothSpeed", 0.0275D, 0.0D, 1.0D);
 				this.seamothEnergyUsage = builder.comment("Energy usage of the seamoth per tick.").defineInRange("seamothEnergyUsage", 100, 0, 1_000_000);
+				this.seamothAscendDescendVertically = builder.comment(
+						"Whether the seamoth should ascend or descend " +
+								"vertically, regardless of pitch (false for " +
+								"Subnautica behavior)").define(
+										"seamothAscendDescendVertically", true);
 
 				builder.pop();
 			}
@@ -312,6 +321,35 @@ public class BetterDivingConfig {
 				builder.pop();
 			}
 
+		}
+
+		public static class DockingBlock {
+			public final ForgeConfigSpec.IntValue dockBlockEnergyCapacity;
+			public final ForgeConfigSpec.IntValue dockBlockEnergyTransferRate;
+			public final ForgeConfigSpec.IntValue dockBlockSolarGenerationRate;
+
+			public DockingBlock(ForgeConfigSpec.Builder builder) {
+				builder.comment("Configs for docking block").push(
+						"docking_block");
+
+				this.dockBlockEnergyCapacity = builder.comment("The energy " +
+						"capacity of the docking block.").defineInRange(
+								"dockingBlockEnergyCapacity",	75000,
+						10000, 2000000);
+				this.dockBlockEnergyTransferRate = builder.comment("The " +
+						"rate at which the docking block recharges a " +
+								"vehicle, per tick.").defineInRange(
+						"dockingBlockEnergyTransferRate",	500,
+						10, 20000);
+				this.dockBlockSolarGenerationRate = builder.comment("The rate" +
+						" at which the docking block generates energy, per 2 " +
+						"seconds. Consider keeping this low if you want to " +
+						"encourage usage of other modded generators or for " +
+						"balance reasons." +
+						".").defineInRange(
+								"dockBlockSolarGenerationRate", 5000, 100,
+						100000);
+			}
 		}
 
 	}

@@ -1,6 +1,8 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "minecraft:block/cube_bottom_top",
   "textures": {
-    "all": "better_diving:block/vehicle_dock"
+    "top": "better_diving:block/vehicle_dock_top",
+    "side": "better_diving:block/vehicle_dock_side",
+    "bottom": "better_diving:block/vehicle_dock_bottom"
   }
 }

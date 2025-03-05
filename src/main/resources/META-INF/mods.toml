@@ -12,8 +12,9 @@ credits="Thank you Xemnes for providing the oxygen gui and seamoth gui textures.
 authors="${mod_authors}"
 description='''${mod_description}'''
 TODO='''
-fix: fix seamoth gui, outcrop features
-new: new sfx; seamoth modules?; docking block?
+fix: seamoth modules?, better vehicle dock texture lmao
+bug: relog while docking on server make seamoth freeze due to perm isDocked, taking seamoth with powercell from creative tab
+make that seamoth lose powercell during IS copy
 '''
 
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.

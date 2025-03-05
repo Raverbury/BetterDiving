@@ -1,16 +1,25 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "###",
-    "#l#",
-    "###"
+    "ggg",
+    "tdt",
+    "crc"
   ],
   "key": {
-    "#": {
-      "item": "better_diving:titanium_ingot"
+    "g": {
+      "tag": "forge:glass/colorless"
     },
-    "l": {
-      "item": "better_diving:lead_ingot"
+    "t": {
+      "tag": "forge:ingots/titanium"
+    },
+    "d": {
+      "item": "minecraft:daylight_detector"
+    },
+    "c": {
+      "tag": "forge:ingots/copper"
+    },
+    "r": {
+      "item": "minecraft:redstone"
     }
   },
   "result": {

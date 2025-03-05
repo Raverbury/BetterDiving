@@ -35,7 +35,7 @@ public class BlockVehicleDock extends BaseEntityBlock {
                                                                   BlockState blockState, BlockEntityType<T> blockEntityType) {
         return level.isClientSide()? null : createTickerHelper(blockEntityType,
                 BetterDivingBlockEntities.DOCKING_BE.get(),
-                BlockEntityVehicleDock::commonTick);
+                BlockEntityVehicleDock::serverTick);
     }
 
     @Override
@@ -48,8 +48,7 @@ public class BlockVehicleDock extends BaseEntityBlock {
                                      BlockPos blockPos) {
         BlockEntity blockEntity = level.getBlockEntity(blockPos);
         if (blockEntity instanceof BlockEntityVehicleDock) {
-            return ((BlockEntityVehicleDock) blockEntity).hasVehicleInRange()
-                    ? 15 : 0;
+            return ((BlockEntityVehicleDock) blockEntity).getRedstoneSignal();
         }
         return 0;
     }

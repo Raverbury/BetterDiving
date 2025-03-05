@@ -1,14 +1,11 @@
 package meldexun.better_diving.capability.inventory.item;
 
 import meldexun.better_diving.BetterDiving;
-import meldexun.better_diving.capability.BasicCapabilityProvider;
 import meldexun.better_diving.capability.BasicCapabilityProviderSerializable;
-import meldexun.better_diving.capability.energy.item.CapabilityEnergyStorageItem;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.NonNullSupplier;
-import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
