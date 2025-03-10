@@ -480,7 +480,7 @@ public class ClientEventHandler {
     }
 
     @SubscribeEvent
-    public static void onKeyInputEvent(InputEvent.InteractionKeyMappingTriggered event) {
+    public static void onKeyInputEvent(InputEvent.Key event) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player != null && mc.player.getVehicle() instanceof EntitySeamoth) {
             if (mc.options.keyInventory.consumeClick()) {

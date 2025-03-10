@@ -59,4 +59,9 @@ public class BetterDiving {
 		}
 	}
 
+	public enum Vehicle {
+		Seamoth,
+		Other,
+	}
+
 }

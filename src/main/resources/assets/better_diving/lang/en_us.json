@@ -42,6 +42,9 @@
 
   "item.better_diving.seamoth": "Seamoth",
 
+  "item.better_diving.vehicle_storage_module": "Storage Module",
+  "item.better_diving.vehicle_engine_efficiency_module": "Engine Efficiency Module",
+
   "block.better_diving.limestone_outcrop": "Limestone Outcrop",
   "block.better_diving.sandstone_outcrop": "Sandstone Outcrop",
   "block.better_diving.shale_outcrop": "Shale Outcrop",

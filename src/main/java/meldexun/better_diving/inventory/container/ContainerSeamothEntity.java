@@ -36,6 +36,7 @@ public class ContainerSeamothEntity extends ContainerSeamoth {
 	protected void onSeamothSlotChanged(int slot) {
 		if (this.seamoth != null) {
 			this.seamoth.syncPowerCell();
+			this.seamoth.countEngineEfficiencyModules(1);
 		}
 	}
 

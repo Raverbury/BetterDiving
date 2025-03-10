@@ -170,11 +170,11 @@ dependencies {
     // Jade
     runtimeOnly fg.deobf("curse.maven:jade-324717:6106101")
     // observable
-    runtimeOnly fg.deobf("curse.maven:observable-509575:5643037")
+//    runtimeOnly fg.deobf("curse.maven:observable-509575:5643037")
     // architectury
-    runtimeOnly fg.deobf("curse.maven:architectury-api-419699:5137938")
+//    runtimeOnly fg.deobf("curse.maven:architectury-api-419699:5137938")
     // kotlin for forge
-    runtimeOnly fg.deobf("curse.maven:kotlin-for-forge-351264:5402061")
+//    runtimeOnly fg.deobf("curse.maven:kotlin-for-forge-351264:5402061")
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

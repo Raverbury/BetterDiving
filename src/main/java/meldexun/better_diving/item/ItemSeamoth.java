@@ -41,7 +41,7 @@ public class ItemSeamoth extends Item {
     public ICapabilityProvider initCapabilities(ItemStack stack,
                                                 CompoundTag nbt) {
         return new CapabilityItemHandlerItemProvider(
-                () -> new CapabilityItemHandlerItem(stack, 1));
+                () -> new CapabilityItemHandlerItem(stack));
     }
 
     @Override
@@ -62,9 +62,11 @@ public class ItemSeamoth extends Item {
                             seamoth.getCapability(
                                             ForgeCapabilities.ITEM_HANDLER)
                                     .ifPresent(c1 -> {
-                                        c1.insertItem(0,
-                                                c.getStackInSlot(0).copy(),
+                                        for (int i = 0; i < c.getSlots(); i++) {
+                                        c1.insertItem(i,
+                                                c.getStackInSlot(i).copy(),
                                                 false);
+                                        }
                                     });
                         });
 

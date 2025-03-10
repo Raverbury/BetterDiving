@@ -4,6 +4,7 @@ import meldexun.better_diving.BetterDiving;
 import meldexun.better_diving.blockentity.BlockEntityVehicleDock;
 import meldexun.better_diving.capability.energy.blockentity.CapabilityEnergyStorageBlockEntityProvider;
 import meldexun.better_diving.capability.inventory.item.CapabilityItemHandlerItemProvider;
+import meldexun.better_diving.capability.inventory.item.CapabilityItemHandlerSeamoth;
 import meldexun.better_diving.config.BetterDivingConfig;
 import meldexun.better_diving.entity.EntityPowerCellPoweredVehicle;
 import net.minecraft.world.entity.Entity;
@@ -24,7 +25,7 @@ public class CapabilityEventHandler {
             event.addCapability(
                     CapabilityItemHandlerItemProvider.REGISTRY_NAME,
                     new CapabilityItemHandlerItemProvider(
-                            () -> new ItemStackHandler(1)));
+                            () -> new CapabilityItemHandlerSeamoth()));
 
         }
     }

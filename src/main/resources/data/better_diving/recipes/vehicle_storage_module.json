@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ttt",
+    " l ",
+    "   "
+  ],
+  "key": {
+    "l": {
+      "tag": "forge:ingots/lithium"
+    },
+    "t": {
+      "tag": "forge:ingots/titanium"
+    }
+  },
+  "result": {
+    "item": "better_diving:vehicle_storage_module"
+  }
+}

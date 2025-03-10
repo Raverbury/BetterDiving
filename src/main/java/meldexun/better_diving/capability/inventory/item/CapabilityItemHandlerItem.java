@@ -3,15 +3,14 @@ package meldexun.better_diving.capability.inventory.item;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.ItemStackHandler;
 
-public class CapabilityItemHandlerItem extends ItemStackHandler {
+public class CapabilityItemHandlerItem extends CapabilityItemHandlerSeamoth {
 
 	private final ItemStack stack;
 	private boolean hasBeenDeserialized = false;
 
-	public CapabilityItemHandlerItem(ItemStack stack, int size) {
-		super(size);
+	public CapabilityItemHandlerItem(ItemStack stack) {
+		super();
 		this.stack = stack;
 		CompoundTag nbt = this.stack.getOrCreateTag();
 		if (nbt.contains(CapabilityItemHandlerItemProvider.REGISTRY_NAME.toString(), Tag.TAG_INT)) {
@@ -45,10 +44,4 @@ public class CapabilityItemHandlerItem extends ItemStackHandler {
 		super.deserializeNBT(nbt.getCompound(CapabilityItemHandlerItemProvider.REGISTRY_NAME.toString()));
 		this.hasBeenDeserialized = true;
 	}
-
-	@Override
-	public void onContentsChanged(int slot) {
-		this.serializeNBT();
-	}
-
 }

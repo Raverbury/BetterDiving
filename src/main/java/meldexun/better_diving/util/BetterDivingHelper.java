@@ -1,14 +1,17 @@
 package meldexun.better_diving.util;
 
+import meldexun.better_diving.BetterDiving;
 import meldexun.better_diving.api.event.PlayerCanBreathEvent;
 import meldexun.better_diving.api.event.PlayerSwimSpeedEvent;
 import meldexun.better_diving.config.BetterDivingConfig;
+import meldexun.better_diving.init.BetterDivingItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
@@ -104,6 +107,15 @@ public class BetterDivingHelper {
         double d3 = -Mth.cos((float) Math.toRadians(-pitch));
         double d4 = Mth.sin((float) Math.toRadians(-pitch));
         return new Vec3(d2 * d3, d4, d1 * d3);
+    }
+
+    public static boolean canEquipModule(BetterDiving.Vehicle vehicle, ItemStack itemStack) {
+        return switch (vehicle) {
+            case Seamoth -> itemStack.is(
+                    BetterDivingItems.VEHICLE_ENGINE_EFFICIENCY_MODULE.get()) || itemStack.is(
+                    BetterDivingItems.VEHICLE_STORAGE_MODULE.get());
+            default -> false;
+        };
     }
 
 }

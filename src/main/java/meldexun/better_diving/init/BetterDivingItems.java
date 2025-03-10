@@ -43,6 +43,13 @@ public class BetterDivingItems {
 
 	public static final RegistryObject<ItemSeamoth> SEAMOTH = ITEMS.register("seamoth", ItemSeamoth::new);
 
+	public static final RegistryObject<Item> VEHICLE_STORAGE_MODULE =
+			ITEMS.register("vehicle_storage_module",
+					() -> new Item(new Item.Properties()));
+	public static final RegistryObject<Item> VEHICLE_ENGINE_EFFICIENCY_MODULE =
+			ITEMS.register("vehicle_engine_efficiency_module",
+					() -> new Item(new Item.Properties()));
+
 	// public static final RegistryObject<AbstractItemDivingGear> DIVING_MASK =
 	// 		ITEMS.register("diving_mask",
 	// 				() -> new AbstractItemDivingGear(BetterDivingMaterials.ArmorMaterials.DIVING_GEAR, EquipmentSlot.HEAD));

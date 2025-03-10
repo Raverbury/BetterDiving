@@ -219,6 +219,7 @@ public class EntitySeamoth extends EntityPowerCellPoweredVehicle {
     @Override
     protected void addPassenger(Entity passenger) {
         super.addPassenger(passenger);
+        countEngineEfficiencyModules(1);
         passenger.setYRot(this.getYRot());
         passenger.setXRot(this.getXRot());
         passenger.setPose(Pose.STANDING);
@@ -334,7 +335,7 @@ public class EntitySeamoth extends EntityPowerCellPoweredVehicle {
 
         if (this.getControllingPassenger() instanceof Player && this.isPlayerSteering() && this.hasEnergy()) {
             if (!this.level().isClientSide()) {
-                this.extractEnergy(
+                this.consumeEnergy(
                         BetterDivingConfig.SERVER_CONFIG.seamoth.seamothEnergyUsage.get());
             }
 
@@ -418,20 +419,12 @@ public class EntitySeamoth extends EntityPowerCellPoweredVehicle {
 
     public ItemStack toItemStack() {
         ItemStack stack = new ItemStack(BetterDivingItems.SEAMOTH.get());
-        // BetterDiving.LOGGER.info("ItemStack ITEM_HANDLER cap {}",
-        //         stack.getCapability(ForgeCapabilities.ITEM_HANDLER)
-        //                 .isPresent());
-        // BetterDiving.LOGGER.info("Entity ITEM_HANDLER cap {}",
-        //         this.getCapability(ForgeCapabilities.ITEM_HANDLER)
-        //                 .isPresent());
-        // BetterDiving.LOGGER.info(!stack.getCapability(ForgeCapabilities.ITEM_HANDLER).orElseThrow(NullPointerException::new).getStackInSlot(0).isEmpty());
 
         stack.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(c -> {
             this.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(c1 -> {
-                // this.level().addFreshEntity(new ItemEntity(this.level(),
-                //         this.getX(), this.getY(), this.getZ(),
-                //         c1.getStackInSlot(0).copy()));
-                c.insertItem(0, c1.getStackInSlot(0).copy(), false);
+                for (int i = 0; i < c1.getSlots(); i++) {
+                    c.insertItem(i, c1.getStackInSlot(i).copy(), false);
+                }
             });
         });
         return stack;

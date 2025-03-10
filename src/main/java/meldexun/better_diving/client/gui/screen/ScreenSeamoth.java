@@ -5,8 +5,10 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import meldexun.better_diving.BetterDiving;
+import meldexun.better_diving.capability.inventory.item.CapabilityItemHandlerSeamoth;
 import meldexun.better_diving.entity.EntitySeamoth;
 import meldexun.better_diving.init.BetterDivingEntities;
+import meldexun.better_diving.init.BetterDivingItems;
 import meldexun.better_diving.inventory.container.ContainerSeamoth;
 import meldexun.better_diving.item.ItemPowerCell;
 import net.minecraft.client.Minecraft;
@@ -17,6 +19,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
@@ -121,9 +124,80 @@ public class ScreenSeamoth extends AbstractContainerScreen<ContainerSeamoth> {
         guiGraphics.blit(TEXTURE, (this.width - this.imageWidth) / 2,
                 (this.height - this.imageHeight) / 2, 0, 0, this.imageWidth,
                 this.imageHeight);
-        this.drawEntity(guiGraphics, this.seamoth,
-                (this.width - this.imageWidth) / 2 + 118,
-                (this.height - this.imageHeight) / 2 + 60, 16, x, y);
+        // not drawing seamoth preview here to make space for extended seamoth
+        // inv
+        // this.drawEntity(guiGraphics, this.seamoth,
+        //         (this.width - this.imageWidth) / 2 + 118,
+        //         (this.height - this.imageHeight) / 2 + 60, 16, x, y);
+        // draws blind/cover on rows that don't have a storage module
+        // or on storage modules with corresponding non-empty inv row
+        int firstModuleSlotOffset = ContainerSeamoth.FIRST_MODULE_SLOT_OFFSET;
+        int invCoverStart = -1;
+        int invCoverSpan = 0;
+        int moduleCoverStart = -1;
+        int moduleCoverSpan = 0;
+        for (int i = 0; i < 4; i++){
+            if (!getMenu().getSlot(firstModuleSlotOffset + i).getItem().is(BetterDivingItems.VEHICLE_STORAGE_MODULE.get())) {
+                if (invCoverStart == -1) {
+                    invCoverStart = i;
+                }
+                invCoverSpan += 1;
+
+                if (moduleCoverStart >= 0) {
+                    drawModuleCover(guiGraphics, moduleCoverStart, moduleCoverSpan);
+                }
+                moduleCoverStart = -1;
+                moduleCoverSpan = 0;
+            }
+            else {
+                if (invCoverStart >= 0) {
+                    drawStorageCover(guiGraphics, invCoverStart, invCoverSpan);
+                }
+                invCoverStart = -1;
+                invCoverSpan = 0;
+
+                if (getMenu().invRowHasItem(i)) {
+                    if (moduleCoverStart == -1) {
+                        moduleCoverStart = i;
+                    }
+                    moduleCoverSpan += 1;
+                }
+                else {
+                    if (moduleCoverStart >= 0) {
+                        drawModuleCover(guiGraphics, moduleCoverStart, moduleCoverSpan);
+                    }
+                    moduleCoverStart = -1;
+                    moduleCoverSpan = 0;
+                }
+            }
+        }
+        // runaway case of should draw ... till last row
+        if (invCoverStart >= 0) {
+            drawStorageCover(guiGraphics, invCoverStart, invCoverSpan);
+        }
+        if (moduleCoverStart >= 0) {
+            drawModuleCover(guiGraphics, moduleCoverStart, moduleCoverSpan);
+        }
+    }
+
+    private void drawStorageCover(GuiGraphics guiGraphics, int start,
+                                  int span) {
+        guiGraphics.fill(
+                this.leftPos + 79,
+                this.topPos + 7 + 18 * start,
+                this.leftPos + 79 + 18 * CapabilityItemHandlerSeamoth.SLOT_PER_STORAGE_MODULE,
+                this.topPos + 7 + 18 * (start + span),
+                FastColor.ARGB32.color(127, 31, 31, 31));
+    }
+
+    private void drawModuleCover(GuiGraphics guiGraphics, int start,
+                                  int span) {
+        guiGraphics.fill(
+                this.leftPos + 61,
+                this.topPos + 7 + 18 * start,
+                this.leftPos + 61 + 18,
+                this.topPos + 7 + 18 * (start + span),
+                FastColor.ARGB32.color(200, 127, 63, 63));
     }
 
     private void drawEntity(GuiGraphics guiGraphics, Entity entity, int x,

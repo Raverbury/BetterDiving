@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "rlr",
+    "gsg",
+    "csc"
+  ],
+  "key": {
+    "r": {
+      "tag": "forge:mushrooms"
+    },
+    "l": {
+      "item": "minecraft:glow_lichen"
+    },
+    "g": {
+      "tag": "forge:ingots/gold"
+    },
+    "c": {
+      "tag": "forge:ingots/copper"
+    },
+    "s": {
+      "tag": "better_diving:coral_fans"
+    }
+  },
+  "result": {
+    "item": "better_diving:vehicle_engine_efficiency_module"
+  }
+}
