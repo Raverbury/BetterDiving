@@ -69,16 +69,10 @@ public class EntityPowerCellPoweredVehicle extends EntityBetterDivingVehicle imp
 
     @Override
     protected void readAdditionalSaveData(CompoundTag compoundTag) {
-        this.entityData.set(IS_DOCKED, compoundTag.contains(
-                "IsDocked") && compoundTag.getBoolean("IsDocked"));
-        this.shouldUndock = compoundTag.contains(
-                "ShouldUndock") && compoundTag.getBoolean("ShouldUndock");
     }
 
     @Override
     protected void addAdditionalSaveData(CompoundTag compoundTag) {
-        compoundTag.putBoolean("IsDocked", this.entityData.get(IS_DOCKED));
-        compoundTag.putBoolean("ShouldUndock", this.shouldUndock);
     }
 
     @Override

@@ -33,9 +33,9 @@ public class BlockVehicleDock extends BaseEntityBlock {
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level,
                                                                   BlockState blockState, BlockEntityType<T> blockEntityType) {
-        return level.isClientSide()? null : createTickerHelper(blockEntityType,
+        return createTickerHelper(blockEntityType,
                 BetterDivingBlockEntities.DOCKING_BE.get(),
-                BlockEntityVehicleDock::serverTick);
+                BlockEntityVehicleDock::commonTick);
     }
 
     @Override
@@ -57,10 +57,9 @@ public class BlockVehicleDock extends BaseEntityBlock {
     public void onRemove(BlockState p_60515_, Level level, BlockPos blockPos,
                          BlockState p_60518_, boolean p_60519_) {
         // this is called on server only, so we need way to sync sigh
-        // syncedentitydata it is
         BlockEntity blockEntity = level.getBlockEntity(blockPos);
         if (blockEntity instanceof BlockEntityVehicleDock) {
-            ((BlockEntityVehicleDock) blockEntity).releaseVehicle();
+            ((BlockEntityVehicleDock) blockEntity).serverReleaseVehicleAndForge();
         }
         super.onRemove(p_60515_, level, blockPos, p_60518_, p_60519_);
     }

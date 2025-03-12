@@ -227,7 +227,6 @@ public class EntitySeamoth extends EntityPowerCellPoweredVehicle {
             player.updatePlayerPose();
         }
         passenger.refreshDimensions();
-        this.shouldUndock = true;
         if (!this.level().isClientSide()) {
             this.syncPowerCell();
         } else if (passenger instanceof Player) {
@@ -292,7 +291,7 @@ public class EntitySeamoth extends EntityPowerCellPoweredVehicle {
     @Override
     @OnlyIn(Dist.CLIENT)
     public void onPassengerTurned(Entity entityToUpdate) {
-        if (this.entityData.get(IS_DOCKED)) {
+        if (this.isDocked()) {
             entityToUpdate.setYRot(this.yRotO);
             entityToUpdate.setXRot(this.xRotO);
             return;
@@ -323,7 +322,7 @@ public class EntitySeamoth extends EntityPowerCellPoweredVehicle {
                     this.getDeltaMovement().y, 0.0D));
         }
 
-        if (this.entityData.get(IS_DOCKED)) {
+        if (this.isDocked()) {
             this.setDeltaMovement(Vec3.ZERO);
             return;
         }

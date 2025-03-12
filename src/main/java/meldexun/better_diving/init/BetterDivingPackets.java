@@ -6,10 +6,10 @@ import meldexun.better_diving.BetterDiving;
 import meldexun.better_diving.network.packet.IPacket;
 import meldexun.better_diving.network.packet.client.CPacketOpenSeamothInventory;
 import meldexun.better_diving.network.packet.client.CPacketSyncSeamothInput;
-import meldexun.better_diving.network.packet.server.SPacketSyncDockingVehicle;
 import meldexun.better_diving.network.packet.server.SPacketSyncOxygen;
 import meldexun.better_diving.network.packet.server.SPacketSyncPowerCellVehicleEnergy;
 import meldexun.better_diving.network.packet.server.SPacketSyncVehiclePowerCell;
+import meldexun.better_diving.network.packet.server.SPacketUndockVehicle;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.simple.SimpleChannel;
 
@@ -24,9 +24,9 @@ public class BetterDivingPackets {
 		registerPacket(SPacketSyncVehiclePowerCell.class, NetworkDirection.PLAY_TO_CLIENT, SPacketSyncVehiclePowerCell::new);
 		registerPacket(SPacketSyncPowerCellVehicleEnergy.class, NetworkDirection.PLAY_TO_CLIENT, SPacketSyncPowerCellVehicleEnergy::new);
 		registerPacket(CPacketOpenSeamothInventory.class, NetworkDirection.PLAY_TO_SERVER, CPacketOpenSeamothInventory::new);
-		registerPacket(SPacketSyncDockingVehicle.class,
+		registerPacket(SPacketUndockVehicle.class,
 				NetworkDirection.PLAY_TO_CLIENT,
-				SPacketSyncDockingVehicle::new);
+				SPacketUndockVehicle::new);
 	}
 
 	private static <T extends IPacket> void registerPacket(Class<T> packetClass, NetworkDirection direction, Supplier<T> packetSupplier) {
